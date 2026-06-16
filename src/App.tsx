@@ -37,7 +37,14 @@ const navItems = [
   { href: "#contact", label: "Contact", icon: Mail },
 ];
 
-const tagIcons = [Cpu, Network, Layers3, ShieldCheck];
+const defaultTagIcons = [Cpu, Network, Layers3, ShieldCheck];
+const tagIconMap: Record<string, any> = {
+  AI: Cpu,
+  Architecture: Network,
+  Platform: Layers3,
+  Enablement: ShieldCheck,
+  Leadership: BriefcaseBusiness,
+};
 
 function App() {
   const [activeTimelineId, setActiveTimelineId] = useState(timeline[0].id);
@@ -180,7 +187,7 @@ function App() {
           aria-labelledby="impact-title"
         >
           <div className="section-heading">
-            <p className="eyebrow">Selected outcomes</p>
+            <p className="eyebrow">Recent Highlights</p>
             <h2 id="impact-title">Measurable engineering impact</h2>
           </div>
           <div className="impact-grid">
@@ -228,7 +235,7 @@ function App() {
               <p className="focus">{activeTimeline.focus}</p>
               <div className="tag-row">
                 {activeTimeline.tags.map((tag, index) => {
-                  const Icon = tagIcons[index % tagIcons.length];
+                  const Icon = tagIconMap[tag] ?? defaultTagIcons[index % defaultTagIcons.length];
                   return (
                     <span key={tag}>
                       <Icon size={14} aria-hidden="true" />
@@ -284,7 +291,17 @@ function App() {
               <img src="/waikato-logo.svg" alt="" aria-hidden="true" />
               <strong>{education.institution}</strong>
             </div>
-            <span>{education.distinction}</span>
+            {Array.isArray(education.distinction) ? (
+              <div>
+                {education.distinction.map((line) => (
+                  <span key={line} className="education-distinction">
+                    {line}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <span>{education.distinction}</span>
+            )}
           </article>
           <article
             id="contact"

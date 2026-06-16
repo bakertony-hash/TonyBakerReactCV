@@ -246,10 +246,14 @@ h3 {
 }
 
 .hero-actions,
-.contact-links,
 .tag-row {
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
+}
+
+.contact-links {
+  display: grid;
   gap: 10px;
 }
 
@@ -273,7 +277,7 @@ h3 {
 .secondary-action,
 .contact-links a {
   border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--surface), transparent 10%);
+  background: var(--surface-strong);
   color: var(--ink);
   padding: 0 15px;
 }
@@ -700,6 +704,11 @@ h3 {
 .contact-card p {
   color: var(--muted);
   line-height: 1.62;
+}
+
+.education-card .eyebrow,
+.contact-card .eyebrow {
+  color: var(--teal);
 }
 
 .education-card strong,
