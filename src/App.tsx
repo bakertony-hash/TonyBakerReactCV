@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
   BriefcaseBusiness,
@@ -43,6 +43,8 @@ function App() {
   const [activeTimelineId, setActiveTimelineId] = useState(timeline[0].id);
   const [activeExpertiseId, setActiveExpertiseId] = useState(expertise[0].id);
   const [isDark, setIsDark] = useState(false);
+  const [activeHighlight, setActiveHighlight] = useState<string | null>(null);
+  const highlightTimer = useRef<number | null>(null);
 
   const activeTimeline = useMemo(
     () => timeline.find((entry) => entry.id === activeTimelineId) ?? timeline[0],
@@ -54,17 +56,50 @@ function App() {
     [activeExpertiseId],
   );
 
+  useEffect(() => {
+    return () => {
+      if (highlightTimer.current) {
+        window.clearTimeout(highlightTimer.current);
+      }
+    };
+  }, []);
+
+  const triggerSectionHighlight = (sectionId: string) => {
+    if (highlightTimer.current) {
+      window.clearTimeout(highlightTimer.current);
+    }
+
+    setActiveHighlight(null);
+    window.requestAnimationFrame(() => {
+      setActiveHighlight(sectionId);
+      highlightTimer.current = window.setTimeout(() => {
+        setActiveHighlight(null);
+        highlightTimer.current = null;
+      }, 1400);
+    });
+  };
+
   return (
     <div className={isDark ? "app app--dark" : "app"}>
       <aside className="nav-rail" aria-label="Primary navigation">
-        <a className="brand-mark" href="#overview" aria-label="Tony Baker overview">
+        <a
+          className="brand-mark"
+          href="#overview"
+          aria-label="Tony Baker overview"
+          onClick={() => triggerSectionHighlight("overview")}
+        >
           TB
         </a>
         <nav className="nav-links">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
-              <a key={item.href} href={item.href} className="icon-button">
+              <a
+                key={item.href}
+                href={item.href}
+                className="icon-button"
+                onClick={() => triggerSectionHighlight(item.href.replace("#", ""))}
+              >
                 <Icon size={18} aria-hidden="true" />
                 <span>{item.label}</span>
               </a>
@@ -83,7 +118,11 @@ function App() {
       </aside>
 
       <main className="page-shell">
-        <section id="overview" className="hero-grid" aria-labelledby="hero-title">
+        <section
+          id="overview"
+          className={activeHighlight === "overview" ? "hero-grid section-highlight" : "hero-grid"}
+          aria-labelledby="hero-title"
+        >
           <div className="hero-copy">
             <p className="eyebrow">Interactive CV / React + TypeScript</p>
             <h1 id="hero-title">{profile.name}</h1>
@@ -135,7 +174,11 @@ function App() {
           </aside>
         </section>
 
-        <section id="impact" className="section-block" aria-labelledby="impact-title">
+        <section
+          id="impact"
+          className={activeHighlight === "impact" ? "section-block section-highlight" : "section-block"}
+          aria-labelledby="impact-title"
+        >
           <div className="section-heading">
             <p className="eyebrow">Selected outcomes</p>
             <h2 id="impact-title">Measurable engineering impact</h2>
@@ -151,7 +194,11 @@ function App() {
           </div>
         </section>
 
-        <section id="experience" className="experience-layout" aria-labelledby="experience-title">
+        <section
+          id="experience"
+          className={activeHighlight === "experience" ? "experience-layout section-highlight" : "experience-layout"}
+          aria-labelledby="experience-title"
+        >
           <div className="section-heading">
             <p className="eyebrow">Interactive timeline</p>
             <h2 id="experience-title">Experience that bridges AI, architecture, and business execution</h2>
@@ -199,7 +246,11 @@ function App() {
           </div>
         </section>
 
-        <section id="expertise" className="expertise-layout" aria-labelledby="expertise-title">
+        <section
+          id="expertise"
+          className={activeHighlight === "expertise" ? "expertise-layout section-highlight" : "expertise-layout"}
+          aria-labelledby="expertise-title"
+        >
           <div className="section-heading">
             <p className="eyebrow">Capability map</p>
             <h2 id="expertise-title">A senior engineering toolkit, made explorable</h2>
@@ -235,7 +286,10 @@ function App() {
             </div>
             <span>{education.distinction}</span>
           </article>
-          <article id="contact" className="contact-card">
+          <article
+            id="contact"
+            className={activeHighlight === "contact" ? "contact-card section-highlight" : "contact-card"}
+          >
             <p className="eyebrow">Availability</p>
             <h2>Global Senior IC roles</h2>
             <p>{availability}</p>

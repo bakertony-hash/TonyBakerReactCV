@@ -381,6 +381,59 @@ h3 {
   padding: 42px 0;
 }
 
+#overview,
+#impact,
+#experience,
+#expertise,
+#contact {
+  scroll-margin-top: 32px;
+}
+
+.section-highlight {
+  position: relative;
+  isolation: isolate;
+}
+
+.section-highlight::before {
+  position: absolute;
+  inset: -18px;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--teal), transparent 30%);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 16% 18%, color-mix(in srgb, var(--teal), transparent 76%), transparent 38%),
+    radial-gradient(circle at 84% 24%, color-mix(in srgb, var(--amber), transparent 78%), transparent 34%),
+    linear-gradient(135deg, color-mix(in srgb, var(--surface-strong), transparent 16%), transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--teal), transparent 78%),
+    0 22px 70px color-mix(in srgb, var(--teal), transparent 82%);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  animation: section-pulse 1400ms ease-out;
+}
+
+@keyframes section-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+
+  18% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  72% {
+    opacity: 0.62;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.01);
+  }
+}
+
 .section-heading {
   display: flex;
   align-items: end;
@@ -820,5 +873,12 @@ h3 {
 
   .timeline-detail {
     min-height: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-highlight::before {
+    animation: none;
+    opacity: 0.7;
   }
 }
