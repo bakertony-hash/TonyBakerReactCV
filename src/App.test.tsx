@@ -2,7 +2,13 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
-import { expertise, impactHighlights, profile, timeline } from "./data/cv";
+import {
+  education,
+  expertise,
+  impactHighlights,
+  profile,
+  timeline,
+} from "./data/cv";
 import { LAYOUT_STORAGE_KEY } from "./layouts/layoutPreference";
 
 beforeEach(() => {
@@ -31,6 +37,54 @@ describe("App", () => {
       "aria-pressed",
       "true",
     );
+  });
+
+  it("renders the complete CV data in the Executive layout", () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: profile.name }),
+    ).toBeInTheDocument();
+
+    for (const highlight of impactHighlights) {
+      expect(screen.getByText(highlight.metric)).toBeInTheDocument();
+      expect(screen.getByText(highlight.detail)).toBeInTheDocument();
+    }
+
+    for (const entry of timeline) {
+      expect(
+        screen.getByRole("heading", { name: entry.role }),
+      ).toBeInTheDocument();
+      for (const bullet of entry.bullets) {
+        expect(screen.getByText(bullet)).toBeInTheDocument();
+      }
+    }
+
+    for (const category of expertise) {
+      expect(
+        screen.getByRole("heading", { name: category.label }),
+      ).toBeInTheDocument();
+      expect(screen.getByText(category.summary)).toBeInTheDocument();
+    }
+
+    expect(
+      screen.getByRole("heading", { name: education.institution }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Download CV" })).toHaveAttribute(
+      "download",
+    );
+  });
+
+  it("does not render fabricated Stitch facts", () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+
+    render(<App />);
+
+    expect(screen.queryByText("$40M")).not.toBeInTheDocument();
+    expect(screen.queryByText(/VP of Infrastructure/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Staff Engineer/i)).not.toBeInTheDocument();
   });
 
   it("switches from a saved executive layout to the interactive layout", async () => {
