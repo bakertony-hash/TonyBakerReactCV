@@ -9,10 +9,12 @@ export function isLayoutId(value: unknown): value is LayoutId {
 }
 
 export function readLayoutPreference(
-  storage: Pick<Storage, "getItem"> = window.localStorage,
+  storage?: Pick<Storage, "getItem">,
 ): LayoutId {
   try {
-    const storedLayout = storage.getItem(LAYOUT_STORAGE_KEY);
+    const storedLayout = (storage ?? window.localStorage).getItem(
+      LAYOUT_STORAGE_KEY,
+    );
     return isLayoutId(storedLayout) ? storedLayout : "interactive";
   } catch {
     return "interactive";
@@ -21,10 +23,10 @@ export function readLayoutPreference(
 
 export function writeLayoutPreference(
   layout: LayoutId,
-  storage: Pick<Storage, "setItem"> = window.localStorage,
+  storage?: Pick<Storage, "setItem">,
 ): void {
   try {
-    storage.setItem(LAYOUT_STORAGE_KEY, layout);
+    (storage ?? window.localStorage).setItem(LAYOUT_STORAGE_KEY, layout);
   } catch {
     // Persistence is optional when storage is unavailable.
   }
