@@ -52,7 +52,7 @@ function ExecutiveLayout({
         </button>
         <nav
           id="executive-navigation"
-          className={`executive-navigation${menuOpen ? " executive-navigation--open" : ""}`}
+          className={`executive-nav${menuOpen ? " executive-nav--open" : ""}`}
           aria-label="Executive navigation"
         >
           {executiveNav.map(({ label, href }) => (
@@ -60,11 +60,11 @@ function ExecutiveLayout({
               {label}
             </a>
           ))}
-          <a href="/Tony_Baker_CV.pdf" download>
+          <a className="executive-nav-download" href="/Tony_Baker_CV.pdf" download>
             <Download aria-hidden="true" />
             Download CV
           </a>
-          <a href={`mailto:${profile.email}`}>
+          <a className="executive-nav-contact" href={`mailto:${profile.email}`}>
             <Mail aria-hidden="true" />
             Contact
           </a>
@@ -77,7 +77,7 @@ function ExecutiveLayout({
 
       <main aria-label="Executive CV">
         <section id="executive-overview" className="executive-hero">
-          <div className="executive-hero-content">
+          <div className="executive-hero-copy">
             <p className="executive-kicker">Distinguished Engineer</p>
             <h1>{profile.name}</h1>
             <p className="executive-title">{profile.title}</p>
@@ -85,9 +85,11 @@ function ExecutiveLayout({
               <MapPin aria-hidden="true" />
               {profile.location}
             </p>
-            {profile.summary.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
+            <div className="executive-summary">
+              {profile.summary.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
             <div className="executive-hero-actions">
               <a href={`mailto:${profile.email}`}>
                 <Mail aria-hidden="true" />
@@ -103,102 +105,142 @@ function ExecutiveLayout({
               </a>
             </div>
           </div>
-          <img src="/tony-baker-headshot.png" alt="Tony Baker" />
+          <figure className="executive-portrait">
+            <img src="/tony-baker-headshot.png" alt="Tony Baker" />
+          </figure>
         </section>
 
-        <section className="executive-impact">
-          <h2 className="visually-hidden">Career impact</h2>
+        <section
+          className="executive-impact"
+          aria-labelledby="executive-impact-title"
+        >
+          <h2 id="executive-impact-title" className="visually-hidden">
+            Measured impact
+          </h2>
           {impactHighlights.map((highlight) => (
             <article
               key={highlight.label}
               className={`executive-impact-card executive-impact-card--${highlight.theme}`}
             >
-              <p className="executive-impact-metric">{highlight.metric}</p>
+              <strong className="executive-impact-metric">{highlight.metric}</strong>
               <h3>{highlight.label}</h3>
               <p>{highlight.detail}</p>
             </article>
           ))}
         </section>
 
-        <section id="executive-experience" className="executive-experience">
-          <h2>Professional Experience</h2>
-          {timeline.map((entry, index) => (
-            <article key={entry.role} className="executive-role">
-              <p className="executive-role-sequence">
-                {String(index + 1).padStart(2, "0")}
-              </p>
-              <div className="executive-role-meta">
-                <p>{entry.period}</p>
-                <p>{entry.location}</p>
-                <p>{entry.company}</p>
-              </div>
-              <h3>{entry.role}</h3>
-              <p>{entry.focus}</p>
-              <ul>
-                {entry.bullets.map((bullet) => (
-                  <li key={bullet}>{bullet}</li>
-                ))}
-              </ul>
-              <ul
-                className="executive-role-tags"
-                aria-label={`${entry.role} capabilities`}
-              >
-                {entry.tags.map((tag) => (
-                  <li key={tag}>{tag}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
+        <section
+          id="executive-experience"
+          className="executive-section"
+          aria-labelledby="executive-experience-title"
+        >
+          <header className="executive-section-heading">
+            <p>Career narrative</p>
+            <h2 id="executive-experience-title">Professional Experience</h2>
+          </header>
+          <div className="executive-timeline">
+            {timeline.map((entry, index) => (
+              <article key={entry.role} className="executive-role">
+                <p className="executive-role-sequence">
+                  {String(index + 1).padStart(2, "0")}
+                </p>
+                <div className="executive-role-meta">
+                  <p>{entry.period}</p>
+                  <p>{entry.location}</p>
+                </div>
+                <div className="executive-role-body">
+                  <p className="executive-company">{entry.company}</p>
+                  <h3>{entry.role}</h3>
+                  <p className="executive-focus">{entry.focus}</p>
+                  <ul>
+                    {entry.bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                  <div
+                    className="executive-tags"
+                    aria-label={`${entry.role} capabilities`}
+                  >
+                    {entry.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
-        <section id="executive-capabilities" className="executive-capabilities">
-          <h2>Executive Capabilities</h2>
-          {expertise.map((category) => (
-            <article key={category.label}>
-              <h3>{category.label}</h3>
-              <p>{category.summary}</p>
-              <ul>
-                {category.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
+        <section
+          id="executive-capabilities"
+          className="executive-section"
+          aria-labelledby="executive-capabilities-title"
+        >
+          <header className="executive-section-heading">
+            <p>Technical range</p>
+            <h2 id="executive-capabilities-title">Executive Capabilities</h2>
+          </header>
+          <div className="executive-capability-grid">
+            {expertise.map((category) => (
+              <article key={category.label}>
+                <h3>{category.label}</h3>
+                <p>{category.summary}</p>
+                <ul>
+                  {category.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
         </section>
 
-        <section id="executive-education" className="executive-education">
-          <h2>Education</h2>
+        <section
+          id="executive-education"
+          className="executive-section executive-education"
+          aria-labelledby="executive-education-title"
+        >
+          <header className="executive-section-heading">
+            <p>Academic foundation</p>
+            <h2 id="executive-education-title">Education</h2>
+          </header>
           <article>
             <GraduationCap aria-hidden="true" />
-            <h3>{education.institution}</h3>
-            <p>{education.degree}</p>
-            <p>{education.field}</p>
-            <ul>
-              {education.distinction.map((distinction) => (
-                <li key={distinction}>{distinction}</li>
-              ))}
-            </ul>
+            <div>
+              <h3>{education.institution}</h3>
+              <p>{education.degree}</p>
+              <p>{education.field}</p>
+              <ul>
+                {education.distinction.map((distinction) => (
+                  <li key={distinction}>{distinction}</li>
+                ))}
+              </ul>
+            </div>
           </article>
         </section>
       </main>
 
       <footer className="executive-footer">
-        <p>{profile.name}</p>
-        <p>{availability}</p>
-        <a href={`mailto:${profile.email}`}>{profile.email}</a>
-        <a href={`tel:${phoneHref}`}>{profile.phone}</a>
-        <a
-          href={`https://${profile.linkedin}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {profile.linkedin}
-          <ExternalLink aria-hidden="true" />
-        </a>
-        <a href="/Tony_Baker_CV.pdf" download>
-          <Download aria-hidden="true" />
-          Download portfolio CV
-        </a>
+        <div>
+          <strong>{profile.name}</strong>
+          <p>{availability}</p>
+        </div>
+        <div className="executive-footer-links">
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          <a href={`tel:${phoneHref}`}>{profile.phone}</a>
+          <a
+            href={`https://${profile.linkedin}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            LinkedIn
+            <ExternalLink aria-hidden="true" />
+          </a>
+          <a href="/Tony_Baker_CV.pdf" download>
+            <Download aria-hidden="true" />
+            Download portfolio CV
+          </a>
+        </div>
       </footer>
     </div>
   );

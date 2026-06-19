@@ -87,6 +87,72 @@ describe("App", () => {
     expect(screen.queryByText(/Staff Engineer/i)).not.toBeInTheDocument();
   });
 
+  it("matches the Executive layout design structure", () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+
+    const { container } = render(<App />);
+
+    const nav = container.querySelector("#executive-navigation");
+    expect(nav).toHaveClass("executive-nav");
+    expect(nav?.querySelector(".executive-nav-download")).toHaveAttribute("download");
+    expect(nav?.querySelector(".executive-nav-contact")).toHaveAttribute(
+      "href",
+      `mailto:${profile.email}`,
+    );
+
+    expect(container.querySelector(".executive-hero-copy .executive-summary")).not.toBeNull();
+    expect(container.querySelector("figure.executive-portrait img")).toHaveAttribute(
+      "src",
+      "/tony-baker-headshot.png",
+    );
+
+    const impact = container.querySelector("section.executive-impact");
+    expect(impact).toHaveAttribute("aria-labelledby", "executive-impact-title");
+    expect(impact?.querySelector("#executive-impact-title")).toHaveTextContent(
+      "Measured impact",
+    );
+    expect(impact?.querySelectorAll("article strong")).toHaveLength(impactHighlights.length);
+
+    const experience = container.querySelector("#executive-experience");
+    expect(experience).toHaveClass("executive-section");
+    expect(experience).toHaveAttribute("aria-labelledby", "executive-experience-title");
+    expect(experience?.querySelector(".executive-section-heading p")).toHaveTextContent(
+      "Career narrative",
+    );
+    expect(experience?.querySelector(".executive-timeline")).not.toBeNull();
+    expect(experience?.querySelectorAll(".executive-role-body")).toHaveLength(timeline.length);
+
+    const capabilities = container.querySelector("#executive-capabilities");
+    expect(capabilities).toHaveClass("executive-section");
+    expect(capabilities).toHaveAttribute(
+      "aria-labelledby",
+      "executive-capabilities-title",
+    );
+    expect(capabilities?.querySelector(".executive-section-heading p")).toHaveTextContent(
+      "Technical range",
+    );
+    expect(capabilities?.querySelector(".executive-capability-grid")).not.toBeNull();
+
+    const educationSection = container.querySelector("#executive-education");
+    expect(educationSection).toHaveClass("executive-section", "executive-education");
+    expect(educationSection).toHaveAttribute(
+      "aria-labelledby",
+      "executive-education-title",
+    );
+    expect(educationSection?.querySelector(".executive-section-heading p")).toHaveTextContent(
+      "Academic foundation",
+    );
+
+    expect(container.querySelector(".executive-footer > div:first-child strong")).toHaveTextContent(
+      profile.name,
+    );
+    const footerLinks = container.querySelector(".executive-footer-links");
+    expect(within(footerLinks as HTMLElement).getByRole("link", { name: /LinkedIn/i })).toHaveAttribute(
+      "href",
+      `https://${profile.linkedin}`,
+    );
+  });
+
   it("switches from a saved executive layout to the interactive layout", async () => {
     window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
     const user = userEvent.setup();
