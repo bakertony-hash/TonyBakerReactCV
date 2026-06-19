@@ -1,8 +1,12 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
 import { expertise, impactHighlights, profile, timeline } from "./data/cv";
+
+beforeEach(() => {
+  window.localStorage.clear();
+});
 
 // Top-level suite for the main application component and its interactive behavior.
 describe("App", () => {
