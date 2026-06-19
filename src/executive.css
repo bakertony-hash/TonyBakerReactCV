@@ -6,7 +6,9 @@
   --executive-muted: #5e5f5d;
   --executive-line: #d1d1cb;
   --executive-gold: #c5a059;
+  --executive-gold-strong: #74570f;
   --executive-copper: #b87333;
+  --executive-copper-strong: #8a4b20;
   min-height: 100vh;
   overflow-x: clip;
   background: var(--executive-paper);
@@ -41,7 +43,7 @@
 
 .executive-layout a:focus-visible,
 .executive-layout button:focus-visible {
-  outline: 2px solid var(--executive-gold);
+  outline: 2px solid var(--executive-gold-strong);
   outline-offset: 3px;
 }
 
@@ -57,7 +59,7 @@
 .executive-layout .executive-hero-actions a:last-child:active,
 .executive-layout .executive-menu-button:active,
 .executive-layout .layout-switcher button:active:not([aria-pressed="true"]) {
-  border-color: var(--executive-gold);
+  border-color: var(--executive-gold-strong);
   background: var(--executive-slate);
 }
 
@@ -65,7 +67,7 @@
 .executive-layout .executive-hero-actions a:first-child:active,
 .executive-layout .executive-footer-links a:last-child:active,
 .executive-layout .layout-switcher button[aria-pressed="true"]:active {
-  background: var(--executive-copper);
+  background: var(--executive-copper-strong);
   color: var(--executive-raised);
 }
 
@@ -97,7 +99,7 @@
 .executive-layout .executive-wordmark:hover,
 .executive-layout .executive-nav > a:not(.executive-nav-contact):hover,
 .executive-layout .executive-footer a:hover {
-  color: var(--executive-copper);
+  color: var(--executive-copper-strong);
 }
 
 .executive-layout .executive-nav {
@@ -135,14 +137,14 @@
 
 .executive-layout .executive-nav-download:hover,
 .executive-layout .executive-hero-actions a:last-child:hover {
-  border-color: var(--executive-copper);
+  border-color: var(--executive-copper-strong);
   background: var(--executive-slate);
 }
 
 .executive-layout .executive-nav-contact:hover,
 .executive-layout .executive-hero-actions a:first-child:hover,
 .executive-layout .executive-footer-links a:last-child:hover {
-  background: var(--executive-copper);
+  background: var(--executive-copper-strong);
   color: var(--executive-raised);
 }
 
@@ -184,7 +186,7 @@
 }
 
 .executive-layout .layout-switcher button:focus-visible {
-  outline-color: var(--executive-gold);
+  outline-color: var(--executive-gold-strong);
 }
 
 .executive-layout main {
@@ -214,7 +216,7 @@
 
 .executive-layout .executive-kicker {
   margin-bottom: 12px;
-  color: var(--executive-copper);
+  color: var(--executive-copper-strong);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.18em;
@@ -250,7 +252,7 @@
 .executive-layout .executive-location svg {
   width: 14px;
   height: 14px;
-  color: var(--executive-copper);
+  color: var(--executive-copper-strong);
 }
 
 .executive-layout .executive-target-roles,
@@ -396,7 +398,7 @@
 
 .executive-layout .executive-section-heading > p {
   margin-bottom: 0;
-  color: var(--executive-copper);
+  color: var(--executive-copper-strong);
   font-size: 0.69rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -474,7 +476,7 @@
 }
 
 .executive-layout .executive-role-meta span {
-  color: var(--executive-copper);
+  color: var(--executive-copper-strong);
   font-size: 0.78rem;
 }
 
@@ -488,7 +490,7 @@
 
 .executive-layout .executive-company {
   margin-bottom: 2px;
-  color: var(--executive-copper);
+  color: var(--executive-copper-strong);
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -665,7 +667,7 @@
   padding: 0 12px;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1120px) {
   .executive-layout .executive-header,
   .executive-layout main,
   .executive-layout .executive-footer {
