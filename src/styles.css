@@ -891,3 +891,44 @@ h3 {
     opacity: 0.7;
   }
 }
+
+.layout-switcher {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+}
+
+.layout-switcher button {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 3px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.layout-switcher button[aria-pressed="true"] {
+  background: currentColor;
+}
+
+.layout-switcher button[aria-pressed="true"] span {
+  color: var(--surface, #fff);
+}
+
+.layout-switcher button:focus-visible {
+  outline: 3px solid var(--amber, #c5a059);
+  outline-offset: 3px;
+}
+
+.layout-switcher--compact {
+  display: grid;
+  grid-template-columns: repeat(2, 32px);
+}
+
+.layout-switcher--compact button {
+  min-height: 32px;
+  padding: 0;
+}

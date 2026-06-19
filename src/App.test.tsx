@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
 import { expertise, impactHighlights, profile, timeline } from "./data/cv";
+import { LAYOUT_STORAGE_KEY } from "./layouts/layoutPreference";
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -10,6 +11,39 @@ beforeEach(() => {
 
 // Top-level suite for the main application component and its interactive behavior.
 describe("App", () => {
+  it("switches to the executive layout and saves the preference", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Executive layout" }));
+
+    expect(screen.getByRole("main", { name: "Executive CV" })).toBeInTheDocument();
+    expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("executive");
+  });
+
+  it("restores a saved executive layout preference", () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+
+    render(<App />);
+
+    expect(screen.getByRole("main", { name: "Executive CV" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Executive layout" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  it("switches from a saved executive layout to the interactive layout", async () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Interactive layout" }));
+
+    expect(screen.getByRole("complementary", { name: "Primary navigation" })).toBeInTheDocument();
+    expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("interactive");
+  });
+
   // Verify the top-level profile summary, career impact metrics, and primary call-to-action links.
   it("presents Tony Baker's profile, impact metrics, and primary actions", () => {
     render(<App />);
