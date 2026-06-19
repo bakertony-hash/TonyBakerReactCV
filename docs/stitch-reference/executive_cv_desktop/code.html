@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tony Baker | Distinguished Engineer &amp; AI Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        ::selection {
+            background-color: #B87333;
+            color: white;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#444748",
+                      "border-subtle": "#D1D1CB",
+                      "secondary-fixed": "#e3e2e0",
+                      "on-tertiary-container": "#a17f3b",
+                      "tertiary-fixed": "#ffdea5",
+                      "on-error": "#ffffff",
+                      "secondary-fixed-dim": "#c7c6c4",
+                      "tertiary-container": "#261900",
+                      "on-tertiary-fixed": "#261900",
+                      "on-secondary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "secondary": "#5e5f5d",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e4e2e2",
+                      "on-primary-fixed": "#1c1b1b",
+                      "primary-fixed": "#e5e2e1",
+                      "copper-accent": "#B87333",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed": "#1a1c1a",
+                      "on-tertiary-fixed-variant": "#5d4201",
+                      "tertiary-fixed-dim": "#e9c176",
+                      "on-primary": "#ffffff",
+                      "ink-deep": "#0F172A",
+                      "on-primary-fixed-variant": "#474746",
+                      "slate-surface": "#F1F0EA",
+                      "surface-variant": "#e4e2e2",
+                      "background": "#fbf9f8",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-high": "#e9e8e7",
+                      "surface-container": "#efeded",
+                      "surface-bright": "#fbf9f8",
+                      "on-secondary-container": "#626361",
+                      "secondary-container": "#e0e0dd",
+                      "outline-variant": "#c4c7c7",
+                      "on-secondary-fixed-variant": "#464745",
+                      "surface-dim": "#dbdad9",
+                      "inverse-surface": "#303031",
+                      "on-background": "#1b1c1c",
+                      "primary-container": "#1c1b1b",
+                      "primary": "#000000",
+                      "on-primary-container": "#858383",
+                      "on-surface": "#1b1c1c",
+                      "surface-container-low": "#f5f3f3",
+                      "inverse-on-surface": "#f2f0f0",
+                      "tertiary": "#000000",
+                      "surface": "#fbf9f8",
+                      "outline": "#747878",
+                      "primary-fixed-dim": "#c8c6c5",
+                      "inverse-primary": "#c8c6c5",
+                      "surface-tint": "#5f5e5e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-sm": "12px",
+                      "margin-page": "64px",
+                      "unit": "4px",
+                      "stack-lg": "48px",
+                      "section-gap": "96px",
+                      "stack-md": "24px",
+                      "gutter": "32px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "headline-xl": ["Playfair Display"],
+                      "display-lg-mobile": ["Playfair Display"],
+                      "label-mono": ["JetBrains Mono"],
+                      "headline-lg": ["Playfair Display"],
+                      "headline-md": ["Playfair Display"],
+                      "body-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "display-lg": ["Playfair Display"],
+                      "quote-editorial": ["Playfair Display"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-xl": ["48px", {"lineHeight": "56px", "fontWeight": "600"}],
+                      "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "label-mono": ["13px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "quote-editorial": ["24px", {"lineHeight": "36px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-copper-accent selection:text-white overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-background/95 backdrop-blur-sm border-b border-border-subtle">
+<nav class="max-w-[1200px] mx-auto px-margin-page py-stack-sm flex justify-between items-center h-16">
+<div class="flex items-center gap-stack-md">
+<a class="text-headline-md font-headline-md font-semibold tracking-tight text-primary" href="#">Tony Baker</a>
+</div>
+<div class="hidden md:flex gap-stack-lg items-center">
+<a class="text-label-mono font-label-mono uppercase text-on-secondary-container hover:text-primary transition-colors border-b-2 border-transparent hover:border-copper-accent pb-1" href="#experience">Experience</a>
+<a class="text-label-mono font-label-mono uppercase text-on-secondary-container hover:text-primary transition-colors border-b-2 border-transparent hover:border-copper-accent pb-1" href="#capabilities">Capabilities</a>
+<a class="text-label-mono font-label-mono uppercase text-on-secondary-container hover:text-primary transition-colors border-b-2 border-transparent hover:border-copper-accent pb-1" href="#education">Education</a>
+</div>
+<div class="flex gap-stack-sm items-center">
+<button class="hidden sm:block border border-primary px-stack-md py-2 text-label-mono uppercase font-semibold transition-all hover:bg-primary hover:text-background active:scale-95">
+                    Download CV
+                </button>
+<button class="bg-primary text-background px-stack-md py-2 text-label-mono uppercase font-semibold transition-all hover:bg-copper-accent active:scale-95">
+                    Contact
+                </button>
+</div>
+</nav>
+</header>
+<main class="max-w-[1200px] mx-auto px-margin-page pt-32">
+<!-- Hero Section -->
+<section class="mb-section-gap grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-7">
+<span class="text-label-mono font-label-mono text-copper-accent uppercase tracking-[0.2em] mb-stack-sm block">Distinguished Engineer</span>
+<h1 class="text-display-lg font-display-lg text-primary mb-stack-sm">Tony Baker</h1>
+<p class="text-headline-md font-headline-md text-on-secondary-container leading-relaxed italic mb-stack-md">
+                    AI Engineering | Software Architect
+                </p>
+<div class="flex items-center gap-2 text-label-mono text-on-surface-variant mb-stack-lg">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span>Auckland, New Zealand</span>
+</div>
+<div class="max-w-2xl border-l-2 border-copper-accent pl-stack-md">
+<p class="text-body-lg font-body-lg text-on-surface-variant leading-relaxed">
+                        A results-oriented technologist with a proven track record of bridging the gap between strategic business objectives and deep technical execution. Expert in architecting scalable AI ecosystems and cloud-native platforms that drive measurable operational efficiency.
+                    </p>
+</div>
+</div>
+<div class="md:col-span-5 flex justify-center md:justify-end relative">
+<div class="relative w-72 h-[450px] md:w-80 md:h-[500px]">
+<div class="absolute inset-0 border border-border-subtle -translate-x-4 translate-y-4"></div>
+<div class="absolute inset-0 overflow-hidden bg-slate-surface rounded-t-full">
+<img alt="Tony Baker" class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida/AP1WRLt-Qydan6RaTLJ8QNL1cCvsQ-JGHtRaun973U6kDSKGpArz1oMDhrDdUVDcR4V1P96SE_s1E5BQs-ApIYifkkKWzUN3fdEZEgURHGgeHZCvMIvqMx4hDKN9r3jzBiVevLtbyAlr8bKAPUnaQv3WbK2QGnjMKFHLtc4BjyzgETtJy4H90fICYx8gxU4nz5iXUygD--R02rO9LM8koXG8aDc0QH8Xi3jb5TsM1xDlfZq_QjBSFZOcBNIRBg"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Impact Metrics -->
+<section class="mb-section-gap py-stack-lg border-y border-border-subtle bg-surface-container-lowest/50">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter text-center">
+<div class="flex flex-col items-center">
+<span class="text-display-lg font-display-lg text-copper-accent mb-2">90%</span>
+<span class="text-label-mono font-label-mono uppercase text-secondary tracking-widest text-[10px]">Reduction in config time</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-display-lg font-display-lg text-copper-accent mb-2">96%+</span>
+<span class="text-label-mono font-label-mono uppercase text-secondary tracking-widest text-[10px]">Faster solve time</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-display-lg font-display-lg text-copper-accent mb-2">100%</span>
+<span class="text-label-mono font-label-mono uppercase text-secondary tracking-widest text-[10px]">AI-Assisted Adoption</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-display-lg font-display-lg text-copper-accent mb-2">82%</span>
+<span class="text-label-mono font-label-mono uppercase text-secondary tracking-widest text-[10px]">API performance gain</span>
+</div>
+</div>
+</section>
+<!-- Professional Experience -->
+<section class="mb-section-gap" id="experience">
+<div class="mb-stack-lg flex items-center gap-stack-md">
+<h2 class="text-headline-xl font-headline-xl text-primary shrink-0">Professional Experience</h2>
+<div class="h-[1px] bg-border-subtle w-full"></div>
+</div>
+<div class="relative space-y-section-gap">
+<!-- Timeline vertical line -->
+<div class="absolute left-[7px] md:left-[15px] top-4 bottom-0 w-[1px] bg-border-subtle"></div>
+<!-- Role: Yes Energy -->
+<div class="relative pl-10 md:pl-16">
+<div class="absolute left-0 top-2 w-4 h-4 md:w-8 md:h-8 bg-background border-2 border-copper-accent rounded-full flex items-center justify-center">
+<div class="w-1 h-1 md:w-2 md:h-2 bg-copper-accent rounded-full"></div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-start mb-stack-sm">
+<div>
+<h3 class="text-headline-md font-headline-md text-primary">Yes Energy — Distinguished Engineer</h3>
+<p class="text-label-mono font-label-mono text-copper-accent uppercase tracking-wider">2022 — Present | Auckland, NZ</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-md">
+<div class="md:col-span-4">
+<p class="text-body-md font-body-md font-semibold text-on-surface-variant mb-2">Professional Focus:</p>
+<p class="text-body-sm font-body-sm text-secondary leading-relaxed">
+                                Driving architectural transformation through high-performance computing, AI integration, and operational excellence in energy market software.
+                            </p>
+</div>
+<div class="md:col-span-8">
+<ul class="space-y-stack-sm">
+<li class="flex gap-stack-sm text-body-md font-body-md text-on-surface">
+<span class="text-copper-accent font-headline-md">01</span>
+<span>Engineered a 90% reduction in ensemble configuration latency through Rust-based microservices.</span>
+</li>
+<li class="flex gap-stack-sm text-body-md font-body-md text-on-surface">
+<span class="text-copper-accent font-headline-md">02</span>
+<span>Architected a unified AI agent ecosystem to automate legacy documentation and code migration.</span>
+</li>
+<li class="flex gap-stack-sm text-body-md font-body-md text-on-surface">
+<span class="text-copper-accent font-headline-md">03</span>
+<span>Spearheaded the transition to serverless cloud infrastructure, improving API scalability by 82%.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Role: TESLA Asia Pacific -->
+<div class="relative pl-10 md:pl-16">
+<div class="absolute left-0 top-2 w-4 h-4 md:w-8 md:h-8 bg-background border-2 border-border-subtle rounded-full"></div>
+<div class="flex flex-col md:flex-row justify-between items-start mb-stack-sm">
+<div>
+<h3 class="text-headline-md font-headline-md text-primary">TESLA Asia Pacific — Managing Director</h3>
+<p class="text-label-mono font-label-mono text-secondary uppercase tracking-wider">2010 — 2022 | Auckland, NZ</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-md">
+<div class="md:col-span-4">
+<p class="text-body-md font-body-md font-semibold text-on-surface-variant mb-2">Leadership Legacy:</p>
+<p class="text-body-sm font-body-sm text-secondary leading-relaxed">
+                                Scaled regional operations across APAC, overseeing full P&amp;L and technical strategy for high-frequency energy forecasting platforms.
+                            </p>
+</div>
+<div class="md:col-span-8">
+<ul class="space-y-stack-sm">
+<li class="flex gap-stack-sm text-body-md font-body-md text-on-surface">
+<span class="text-border-subtle font-headline-md">01</span>
+<span>Built and led a high-performance engineering team delivering 99.99% uptime for critical grid infrastructure.</span>
+</li>
+<li class="flex gap-stack-sm text-body-md font-body-md text-on-surface">
+<span class="text-border-subtle font-headline-md">02</span>
+<span>Directly managed key accounts for major utilities across South Korea, Australia, and Singapore.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Role: TESLA Europe -->
+<div class="relative pl-10 md:pl-16">
+<div class="absolute left-0 top-2 w-4 h-4 md:w-8 md:h-8 bg-background border-2 border-border-subtle rounded-full"></div>
+<div class="flex flex-col md:flex-row justify-between items-start mb-stack-sm">
+<div>
+<h3 class="text-headline-md font-headline-md text-primary">TESLA Europe Limited — Technical Manager</h3>
+<p class="text-label-mono font-label-mono text-secondary uppercase tracking-wider">2005 — 2010 | London, UK</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-md">
+<div class="md:col-span-12">
+<p class="text-body-md font-body-md text-on-surface leading-relaxed">
+                                Orchestrated technical delivery of forecasting solutions for the European market, establishing rigorous DevOps patterns and automated QA cycles that reduced deployment errors by 45%.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Earlier Career -->
+<div class="relative pl-10 md:pl-16 opacity-60">
+<div class="absolute left-[3px] md:left-[11px] top-2 w-2 h-2 md:w-2 md:h-2 bg-border-subtle rounded-full"></div>
+<div class="mb-stack-sm">
+<h3 class="text-body-lg font-body-lg font-semibold text-primary">Software Engineering Foundations</h3>
+<p class="text-label-mono font-label-mono text-secondary uppercase text-[11px]">Prior to 2005</p>
+</div>
+<p class="text-body-sm font-body-sm text-secondary italic">
+                        Established deep roots in distributed systems, low-level optimization, and enterprise software architecture.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Executive Capabilities -->
+<section class="mb-section-gap" id="capabilities">
+<div class="mb-stack-lg flex items-center gap-stack-md">
+<h2 class="text-headline-xl font-headline-xl text-primary shrink-0">Executive Capabilities</h2>
+<div class="h-[1px] bg-border-subtle w-full"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
+<!-- Group 1 -->
+<div class="p-stack-md border-l-2 border-slate-surface hover:border-copper-accent transition-all duration-300">
+<h3 class="text-label-mono font-label-mono text-copper-accent uppercase mb-stack-sm tracking-widest">AI &amp; Agent Ecosystem</h3>
+<p class="text-body-md font-body-md text-on-surface mb-stack-md">
+                        Designing multi-agent frameworks for code synthesis, knowledge retrieval, and automated system maintenance.
+                    </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">LLM Orchestration</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">RAG Architecture</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">AI-First SDLC</span>
+</div>
+</div>
+<!-- Group 2 -->
+<div class="p-stack-md border-l-2 border-slate-surface hover:border-copper-accent transition-all duration-300">
+<h3 class="text-label-mono font-label-mono text-copper-accent uppercase mb-stack-sm tracking-widest">Architecture &amp; Patterns</h3>
+<p class="text-body-md font-body-md text-on-surface mb-stack-md">
+                        Mastery of distributed systems, event-driven architectures, and domain-driven design at global scale.
+                    </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">Cloud Native</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">Microservices</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">Serverless</span>
+</div>
+</div>
+<!-- Group 3 -->
+<div class="p-stack-md border-l-2 border-slate-surface hover:border-copper-accent transition-all duration-300">
+<h3 class="text-label-mono font-label-mono text-copper-accent uppercase mb-stack-sm tracking-widest">Languages &amp; Frameworks</h3>
+<p class="text-body-md font-body-md text-on-surface mb-stack-md">
+                        Fluent across the stack with a focus on performance-critical systems and modern web technologies.
+                    </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">Rust</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">Go</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">TypeScript</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">Python</span>
+</div>
+</div>
+<!-- Group 4 -->
+<div class="p-stack-md border-l-2 border-slate-surface hover:border-copper-accent transition-all duration-300">
+<h3 class="text-label-mono font-label-mono text-copper-accent uppercase mb-stack-sm tracking-widest">Infrastructure &amp; Leadership</h3>
+<p class="text-body-md font-body-md text-on-surface mb-stack-md">
+                        Leading cross-functional teams through complex technical migrations and cultural shifts towards DevOps excellence.
+                    </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">Executive Strategy</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">AWS/GCP</span>
+<span class="px-2 py-1 bg-slate-surface text-label-mono text-[11px] rounded-sm">K8s</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Education -->
+<section class="mb-section-gap" id="education">
+<div class="mb-stack-lg flex items-center gap-stack-md">
+<h2 class="text-headline-xl font-headline-xl text-primary shrink-0">Academic Foundation</h2>
+<div class="h-[1px] bg-border-subtle w-full"></div>
+</div>
+<div class="flex flex-col md:flex-row gap-stack-lg items-start">
+<div class="shrink-0 w-16 h-16 bg-slate-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px] text-copper-accent">school</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-primary">University of Waikato</h3>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Bachelor of Science in Computer Science</p>
+<p class="text-label-mono font-label-mono text-secondary mt-1">New Zealand</p>
+<div class="mt-stack-sm max-w-xl">
+<p class="text-body-sm font-body-sm text-secondary italic">
+                            Focus on computational algorithms, systems programming, and database design. Awarded for academic excellence in distributed computing.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-border-subtle mt-section-gap">
+<div class="max-w-[1200px] mx-auto px-margin-page py-stack-lg">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-stack-md">
+<div class="max-w-md">
+<h4 class="text-headline-md font-headline-md font-bold text-primary mb-2">Tony Baker</h4>
+<p class="text-body-sm font-body-sm text-secondary leading-relaxed">
+                        Distinguished Engineer. Transforming complex engineering challenges into elegant, high-impact digital solutions.
+                    </p>
+</div>
+<div class="flex flex-col md:items-end gap-stack-sm">
+<div class="flex gap-stack-md mb-2">
+<a class="text-label-mono font-label-mono text-on-surface-variant hover:text-copper-accent transition-colors" href="#">LinkedIn</a>
+<a class="text-label-mono font-label-mono text-on-surface-variant hover:text-copper-accent transition-colors" href="#">GitHub</a>
+<a class="text-label-mono font-label-mono text-on-surface-variant hover:text-copper-accent transition-colors" href="mailto:tony.baker@example.com">Email</a>
+</div>
+<button class="bg-primary text-background px-stack-md py-3 text-label-mono uppercase font-semibold transition-all hover:bg-copper-accent active:scale-95 w-full md:w-auto">
+                        Download Portfolio CV
+                    </button>
+</div>
+</div>
+<div class="mt-stack-lg pt-stack-md border-t border-border-subtle flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-label-mono font-label-mono text-on-surface-variant text-[11px]">
+                    © 2024 Tony Baker. Distinguished Engineer.
+                </p>
+<div class="text-label-mono font-label-mono text-[10px] text-on-surface-variant/50 uppercase tracking-[0.3em]">
+                    Built for Precision &amp; Performance
+                </div>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions and scroll effects
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Simple Fade-in Observer
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-4');
+            observer.observe(section);
+        });
+    </script>
+</body></html>

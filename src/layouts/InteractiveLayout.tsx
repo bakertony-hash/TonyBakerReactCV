@@ -273,7 +273,7 @@ function InteractiveLayout({
         >
           <div className="section-heading">
             <p className="eyebrow">Capability map</p>
-            <h2 id="expertise-title">A senior engineering toolkit, made explorable</h2>
+            <h2 id="expertise-title">Engineering Capabilities</h2>
           </div>
 
           <div className="expertise-grid">
