@@ -129,6 +129,10 @@ describe("App", () => {
     });
     const educationArticle = educationHeading.closest("article");
     expect(educationArticle).not.toBeNull();
+    const educationLogo = educationArticle?.querySelector(
+      'img[src="/waikato-logo.svg"]',
+    );
+    expect(educationLogo).toHaveAttribute("alt", "");
     const educationContent = within(educationArticle as HTMLElement);
     expect(educationContent.getByText(education.degree)).toBeInTheDocument();
     expect(educationContent.getByText(education.field)).toBeInTheDocument();

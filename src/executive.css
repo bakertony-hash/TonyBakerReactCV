@@ -583,21 +583,23 @@
 
 .executive-layout .executive-education > article {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
+  grid-template-columns: minmax(180px, 210px) minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
   border-block: 1px solid var(--executive-line);
   background: var(--executive-raised);
   padding: 32px;
 }
 
-.executive-layout .executive-education > article > svg {
-  width: 48px;
-  height: 48px;
+.executive-layout .executive-education-logo {
+  display: block;
+  width: 100%;
+  max-width: 210px;
+  height: auto;
   border: 1px solid var(--executive-line);
   background: var(--executive-slate);
-  color: var(--executive-copper);
-  padding: 12px;
+  object-fit: contain;
+  padding: 16px;
 }
 
 .executive-layout .executive-education h3 {
@@ -929,15 +931,14 @@
   }
 
   .executive-layout .executive-education > article {
-    grid-template-columns: 44px minmax(0, 1fr);
-    gap: 16px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
     padding: 24px 16px;
   }
 
-  .executive-layout .executive-education > article > svg {
-    width: 40px;
-    height: 40px;
-    padding: 9px;
+  .executive-layout .executive-education-logo {
+    width: min(100%, 190px);
+    padding: 12px;
   }
 
   .executive-layout .executive-footer {

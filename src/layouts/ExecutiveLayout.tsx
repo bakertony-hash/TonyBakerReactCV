@@ -1,7 +1,6 @@
 import {
   Download,
   ExternalLink,
-  GraduationCap,
   Mail,
   MapPin,
   Menu,
@@ -207,7 +206,11 @@ function ExecutiveLayout({
             <h2 id="executive-education-title">Education</h2>
           </header>
           <article>
-            <GraduationCap aria-hidden="true" />
+            <img
+              className="executive-education-logo"
+              src="/waikato-logo.svg"
+              alt=""
+            />
             <div>
               <h3>{education.institution}</h3>
               <p>{education.degree}</p>
