@@ -43,72 +43,90 @@ describe("App", () => {
   it("renders the complete CV data in the Executive layout", () => {
     window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
 
-    render(<App />);
+    const { container } = render(<App />);
 
-    expect(
-      screen.getByRole("heading", { level: 1, name: profile.name }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText(profile.title).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(profile.location).length).toBeGreaterThan(0);
+    const profileHeading = screen.getByRole("heading", {
+      level: 1,
+      name: profile.name,
+    });
+    const hero = profileHeading.closest("section");
+    expect(hero).not.toBeNull();
+    const heroContent = within(hero as HTMLElement);
+    expect(heroContent.getByText(profile.title)).toBeInTheDocument();
+    expect(heroContent.getByText(profile.location)).toBeInTheDocument();
     for (const paragraph of profile.summary) {
-      expect(screen.getAllByText(paragraph).length).toBeGreaterThan(0);
+      expect(heroContent.getByText(paragraph)).toBeInTheDocument();
     }
+    const targetRoles = within(screen.getByLabelText("Target roles"));
     for (const role of profile.targetRoles) {
-      expect(screen.getAllByText(role).length).toBeGreaterThan(0);
+      expect(targetRoles.getByText(role)).toBeInTheDocument();
     }
-    expect(screen.getByRole("link", { name: profile.email })).toHaveAttribute(
+    const footer = within(container.querySelector("footer") as HTMLElement);
+    expect(footer.getByRole("link", { name: profile.email })).toHaveAttribute(
       "href",
       `mailto:${profile.email}`,
     );
-    expect(screen.getByRole("link", { name: profile.phone })).toHaveAttribute(
+    expect(footer.getByRole("link", { name: profile.phone })).toHaveAttribute(
       "href",
       `tel:${profile.phone.replace(/\s/g, "")}`,
     );
-    expect(screen.getByRole("link", { name: /LinkedIn/i })).toHaveAttribute(
+    expect(footer.getByRole("link", { name: /LinkedIn/i })).toHaveAttribute(
       "href",
       `https://${profile.linkedin}`,
     );
-    expect(screen.getAllByText(availability).length).toBeGreaterThan(0);
+    expect(footer.getByText(availability)).toBeInTheDocument();
 
     for (const highlight of impactHighlights) {
-      expect(screen.getAllByText(highlight.metric).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(highlight.label).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(highlight.detail).length).toBeGreaterThan(0);
+      const impactArticle = screen.getByText(highlight.metric).closest("article");
+      expect(impactArticle).not.toBeNull();
+      const impactContent = within(impactArticle as HTMLElement);
+      expect(impactContent.getByText(highlight.metric)).toBeInTheDocument();
+      expect(
+        impactContent.getByRole("heading", { name: highlight.label }),
+      ).toBeInTheDocument();
+      expect(impactContent.getByText(highlight.detail)).toBeInTheDocument();
     }
 
     for (const entry of timeline) {
-      expect(
-        screen.getByRole("heading", { name: entry.role }),
-      ).toBeInTheDocument();
-      expect(screen.getAllByText(entry.company).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(entry.period).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(entry.location).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(entry.focus).length).toBeGreaterThan(0);
+      const roleHeading = screen.getByRole("heading", { name: entry.role });
+      const roleArticle = roleHeading.closest("article");
+      expect(roleArticle).not.toBeNull();
+      const roleContent = within(roleArticle as HTMLElement);
+      expect(roleContent.getByText(entry.company)).toBeInTheDocument();
+      expect(roleContent.getByText(entry.period)).toBeInTheDocument();
+      expect(roleContent.getByText(entry.location)).toBeInTheDocument();
+      expect(roleContent.getByText(entry.focus)).toBeInTheDocument();
       for (const tag of entry.tags) {
-        expect(screen.getAllByText(tag).length).toBeGreaterThan(0);
+        expect(roleContent.getByText(tag)).toBeInTheDocument();
       }
       for (const bullet of entry.bullets) {
-        expect(screen.getAllByText(bullet).length).toBeGreaterThan(0);
+        expect(roleContent.getByText(bullet)).toBeInTheDocument();
       }
     }
 
     for (const category of expertise) {
-      expect(
-        screen.getByRole("heading", { name: category.label }),
-      ).toBeInTheDocument();
-      expect(screen.getAllByText(category.summary).length).toBeGreaterThan(0);
+      const categoryHeading = screen.getByRole("heading", {
+        name: category.label,
+      });
+      const categoryArticle = categoryHeading.closest("article");
+      expect(categoryArticle).not.toBeNull();
+      const categoryContent = within(categoryArticle as HTMLElement);
+      expect(categoryContent.getByText(category.summary)).toBeInTheDocument();
       for (const item of category.items) {
-        expect(screen.getAllByText(item).length).toBeGreaterThan(0);
+        expect(categoryContent.getByText(item)).toBeInTheDocument();
       }
     }
 
-    expect(
-      screen.getByRole("heading", { name: education.institution }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText(education.degree).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(education.field).length).toBeGreaterThan(0);
+    const educationHeading = screen.getByRole("heading", {
+      name: education.institution,
+    });
+    const educationArticle = educationHeading.closest("article");
+    expect(educationArticle).not.toBeNull();
+    const educationContent = within(educationArticle as HTMLElement);
+    expect(educationContent.getByText(education.degree)).toBeInTheDocument();
+    expect(educationContent.getByText(education.field)).toBeInTheDocument();
     for (const distinction of education.distinction) {
-      expect(screen.getAllByText(distinction).length).toBeGreaterThan(0);
+      expect(educationContent.getByText(distinction)).toBeInTheDocument();
     }
     for (const downloadLink of screen.getAllByRole("link", {
       name: "Download CV",
