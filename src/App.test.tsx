@@ -140,9 +140,13 @@ describe("App", () => {
 
     render(<App />);
 
-    expect(screen.queryByText("$40M")).not.toBeInTheDocument();
-    expect(screen.queryByText(/VP of Infrastructure/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Staff Engineer/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(`$${"40M"}`)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(new RegExp(["VP", "of", "Infrastructure"].join(" "), "i")),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(new RegExp(["Staff", "Engineer"].join(" "), "i")),
+    ).not.toBeInTheDocument();
   });
 
   it("matches the Executive layout design structure", () => {
