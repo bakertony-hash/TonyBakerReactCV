@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
 import {
+  availability,
   education,
   expertise,
   impactHighlights,
@@ -47,18 +48,47 @@ describe("App", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: profile.name }),
     ).toBeInTheDocument();
+    expect(screen.getAllByText(profile.title).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(profile.location).length).toBeGreaterThan(0);
+    for (const paragraph of profile.summary) {
+      expect(screen.getAllByText(paragraph).length).toBeGreaterThan(0);
+    }
+    for (const role of profile.targetRoles) {
+      expect(screen.getAllByText(role).length).toBeGreaterThan(0);
+    }
+    expect(screen.getByRole("link", { name: profile.email })).toHaveAttribute(
+      "href",
+      `mailto:${profile.email}`,
+    );
+    expect(screen.getByRole("link", { name: profile.phone })).toHaveAttribute(
+      "href",
+      `tel:${profile.phone.replace(/\s/g, "")}`,
+    );
+    expect(screen.getByRole("link", { name: /LinkedIn/i })).toHaveAttribute(
+      "href",
+      `https://${profile.linkedin}`,
+    );
+    expect(screen.getAllByText(availability).length).toBeGreaterThan(0);
 
     for (const highlight of impactHighlights) {
-      expect(screen.getByText(highlight.metric)).toBeInTheDocument();
-      expect(screen.getByText(highlight.detail)).toBeInTheDocument();
+      expect(screen.getAllByText(highlight.metric).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(highlight.label).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(highlight.detail).length).toBeGreaterThan(0);
     }
 
     for (const entry of timeline) {
       expect(
         screen.getByRole("heading", { name: entry.role }),
       ).toBeInTheDocument();
+      expect(screen.getAllByText(entry.company).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(entry.period).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(entry.location).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(entry.focus).length).toBeGreaterThan(0);
+      for (const tag of entry.tags) {
+        expect(screen.getAllByText(tag).length).toBeGreaterThan(0);
+      }
       for (const bullet of entry.bullets) {
-        expect(screen.getByText(bullet)).toBeInTheDocument();
+        expect(screen.getAllByText(bullet).length).toBeGreaterThan(0);
       }
     }
 
@@ -66,12 +96,20 @@ describe("App", () => {
       expect(
         screen.getByRole("heading", { name: category.label }),
       ).toBeInTheDocument();
-      expect(screen.getByText(category.summary)).toBeInTheDocument();
+      expect(screen.getAllByText(category.summary).length).toBeGreaterThan(0);
+      for (const item of category.items) {
+        expect(screen.getAllByText(item).length).toBeGreaterThan(0);
+      }
     }
 
     expect(
       screen.getByRole("heading", { name: education.institution }),
     ).toBeInTheDocument();
+    expect(screen.getAllByText(education.degree).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(education.field).length).toBeGreaterThan(0);
+    for (const distinction of education.distinction) {
+      expect(screen.getAllByText(distinction).length).toBeGreaterThan(0);
+    }
     for (const downloadLink of screen.getAllByRole("link", {
       name: "Download CV",
     })) {

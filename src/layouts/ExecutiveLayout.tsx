@@ -85,6 +85,11 @@ function ExecutiveLayout({
               <MapPin aria-hidden="true" />
               {profile.location}
             </p>
+            <div className="executive-target-roles" aria-label="Target roles">
+              {profile.targetRoles.map((role) => (
+                <span key={role}>{role}</span>
+              ))}
+            </div>
             <div className="executive-summary">
               {profile.summary.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -139,7 +144,7 @@ function ExecutiveLayout({
           </header>
           <div className="executive-timeline">
             {timeline.map((entry, index) => (
-              <article key={entry.role} className="executive-role">
+              <article key={entry.id} className="executive-role">
                 <div className="executive-role-meta">
                   <span>{String(index + 1).padStart(2, "0")}</span>
                   <p>{entry.period}</p>
@@ -179,7 +184,7 @@ function ExecutiveLayout({
           </header>
           <div className="executive-capability-grid">
             {expertise.map((category) => (
-              <article key={category.label}>
+              <article key={category.id}>
                 <h3>{category.label}</h3>
                 <p>{category.summary}</p>
                 <ul>
