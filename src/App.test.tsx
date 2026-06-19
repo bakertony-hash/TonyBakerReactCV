@@ -14,6 +14,7 @@ import { LAYOUT_STORAGE_KEY } from "./layouts/layoutPreference";
 
 beforeEach(() => {
   window.localStorage.clear();
+  window.location.hash = "";
 });
 
 // Top-level suite for the main application component and its interactive behavior.
@@ -25,6 +26,11 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "Executive layout" }));
 
     expect(screen.getByRole("main", { name: "Executive CV" })).toBeInTheDocument();
+    const executiveChoice = screen.getByRole("button", {
+      name: "Executive layout",
+    });
+    await waitFor(() => expect(executiveChoice).toHaveFocus());
+    expect(executiveChoice).toHaveAttribute("aria-pressed", "true");
     expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("executive");
   });
 
@@ -34,10 +40,11 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByRole("main", { name: "Executive CV" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Executive layout" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
+    const executiveChoice = screen.getByRole("button", {
+      name: "Executive layout",
+    });
+    expect(executiveChoice).toHaveAttribute("aria-pressed", "true");
+    expect(executiveChoice).not.toHaveFocus();
   });
 
   it("renders the complete CV data in the Executive layout", () => {
@@ -138,9 +145,13 @@ describe("App", () => {
   it("does not render fabricated Stitch facts", () => {
     window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
 
-    render(<App />);
+    const { container } = render(<App />);
+
+    const renderedText = container.textContent?.replace(/\s+/g, " ") ?? "";
 
     expect(screen.queryByText(`$${"40M"}`)).not.toBeInTheDocument();
+    expect(renderedText).not.toContain(["200", "+"].join(""));
+    expect(renderedText).not.toContain(["99", ".99", "%"].join(""));
     expect(
       screen.queryByText(new RegExp(["VP", "of", "Infrastructure"].join(" "), "i")),
     ).not.toBeInTheDocument();
@@ -240,7 +251,28 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "Interactive layout" }));
 
     expect(screen.getByRole("complementary", { name: "Primary navigation" })).toBeInTheDocument();
+    const interactiveChoice = screen.getByRole("button", {
+      name: "Interactive layout",
+    });
+    await waitFor(() => expect(interactiveChoice).toHaveFocus());
+    expect(interactiveChoice).toHaveAttribute("aria-pressed", "true");
     expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("interactive");
+  });
+
+  it("closes the Executive menu after navigating to Experience", async () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+    const user = userEvent.setup();
+    render(<App />);
+
+    const menuButton = screen.getByRole("button", { name: "Menu" });
+    expect(menuButton).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(menuButton);
+    expect(menuButton).toHaveAttribute("aria-expanded", "true");
+
+    await user.click(screen.getByRole("link", { name: "Experience" }));
+    expect(menuButton).toHaveAttribute("aria-expanded", "false");
+    expect(window.location.hash).toBe("#executive-experience");
   });
 
   // Verify the top-level profile summary, career impact metrics, and primary call-to-action links.
