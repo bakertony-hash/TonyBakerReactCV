@@ -72,9 +72,11 @@ describe("App", () => {
     expect(
       screen.getByRole("heading", { name: education.institution }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Download CV" })).toHaveAttribute(
-      "download",
-    );
+    for (const downloadLink of screen.getAllByRole("link", {
+      name: "Download CV",
+    })) {
+      expect(downloadLink).toHaveAttribute("download");
+    }
   });
 
   it("does not render fabricated Stitch facts", () => {
@@ -99,12 +101,21 @@ describe("App", () => {
       "href",
       `mailto:${profile.email}`,
     );
+    expect(
+      container.querySelector(".executive-menu-button > svg + span"),
+    ).toHaveTextContent("Menu");
 
     expect(container.querySelector(".executive-hero-copy .executive-summary")).not.toBeNull();
     expect(container.querySelector("figure.executive-portrait img")).toHaveAttribute(
       "src",
       "/tony-baker-headshot.png",
     );
+    expect(
+      within(container.querySelector(".executive-hero-actions") as HTMLElement).getByRole(
+        "link",
+        { name: "Download CV" },
+      ),
+    ).toHaveAttribute("download");
 
     const impact = container.querySelector("section.executive-impact");
     expect(impact).toHaveAttribute("aria-labelledby", "executive-impact-title");
@@ -121,6 +132,14 @@ describe("App", () => {
     );
     expect(experience?.querySelector(".executive-timeline")).not.toBeNull();
     expect(experience?.querySelectorAll(".executive-role-body")).toHaveLength(timeline.length);
+    for (const [index, metadata] of Array.from(
+      experience?.querySelectorAll(".executive-role-meta") ?? [],
+    ).entries()) {
+      expect(metadata.firstElementChild).toMatchObject({ tagName: "SPAN" });
+      expect(metadata.firstElementChild).toHaveTextContent(
+        String(index + 1).padStart(2, "0"),
+      );
+    }
 
     const capabilities = container.querySelector("#executive-capabilities");
     expect(capabilities).toHaveClass("executive-section");

@@ -48,7 +48,7 @@ function ExecutiveLayout({
           onClick={() => setMenuOpen((open) => !open)}
         >
           <Menu aria-hidden="true" />
-          Menu
+          <span>Menu</span>
         </button>
         <nav
           id="executive-navigation"
@@ -98,7 +98,6 @@ function ExecutiveLayout({
               <a
                 href="/Tony_Baker_CV.pdf"
                 download
-                aria-label="Download portfolio CV"
               >
                 <Download aria-hidden="true" />
                 Download CV
@@ -141,10 +140,8 @@ function ExecutiveLayout({
           <div className="executive-timeline">
             {timeline.map((entry, index) => (
               <article key={entry.role} className="executive-role">
-                <p className="executive-role-sequence">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
                 <div className="executive-role-meta">
+                  <span>{String(index + 1).padStart(2, "0")}</span>
                   <p>{entry.period}</p>
                   <p>{entry.location}</p>
                 </div>
