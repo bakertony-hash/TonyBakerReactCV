@@ -736,7 +736,7 @@ function ExecutiveLayout({
         <section className="executive-section" id="executive-capabilities" aria-labelledby="executive-capabilities-title">
           <header className="executive-section-heading">
             <p>Technical range</p>
-            <h2 id="executive-capabilities-title">Executive Capabilities</h2>
+            <h2 id="executive-capabilities-title">Engineering Capabilities</h2>
           </header>
           <div className="executive-capability-grid">
             {expertise.map((category) => (

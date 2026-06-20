@@ -105,7 +105,7 @@ Production font loading will be explicit and resilient. System fallbacks must pr
 - Editorial hero with positioning, summary, location, and portrait
 - Prominent four-item impact strip
 - Full professional chronology using every entry and achievement from `timeline`
-- Executive capabilities section derived from all `expertise` categories
+- Engineering capabilities section derived from all `expertise` categories
 - Academic foundation section derived from `education`
 - Availability, contact, LinkedIn, and CV download footer
 
