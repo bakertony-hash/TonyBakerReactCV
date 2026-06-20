@@ -10,7 +10,7 @@ describe("layout preference", () => {
     vi.restoreAllMocks();
   });
 
-  it.each(["interactive", "executive"] as const)(
+  it.each(["interactive", "static"] as const)(
     "reads the %s layout preference",
     (layout) => {
       const getItem = vi.fn().mockReturnValue(layout);
@@ -20,7 +20,7 @@ describe("layout preference", () => {
     },
   );
 
-  it.each([null, "", "magazine", "EXECUTIVE"])(
+  it.each([null, "", "magazine", "STATIC"])(
     "falls back to interactive for invalid stored value %s",
     (storedValue) => {
       const getItem = vi.fn().mockReturnValue(storedValue);
@@ -45,12 +45,12 @@ describe("layout preference", () => {
     expect(readLayoutPreference()).toBe("interactive");
   });
 
-  it("writes the executive layout preference", () => {
+  it("writes the Static layout preference", () => {
     const setItem = vi.fn();
 
-    writeLayoutPreference("executive", { setItem });
+    writeLayoutPreference("static", { setItem });
 
-    expect(setItem).toHaveBeenCalledWith(LAYOUT_STORAGE_KEY, "executive");
+    expect(setItem).toHaveBeenCalledWith(LAYOUT_STORAGE_KEY, "static");
   });
 
   it("swallows storage write failures", () => {
@@ -58,7 +58,7 @@ describe("layout preference", () => {
       throw new DOMException("blocked");
     });
 
-    expect(() => writeLayoutPreference("executive", { setItem })).not.toThrow();
+    expect(() => writeLayoutPreference("static", { setItem })).not.toThrow();
   });
 
   it("swallows default storage lookup failures when writing", () => {
@@ -66,6 +66,7 @@ describe("layout preference", () => {
       throw new DOMException("blocked");
     });
 
-    expect(() => writeLayoutPreference("executive")).not.toThrow();
+    expect(() => writeLayoutPreference("static")).not.toThrow();
   });
 });
+

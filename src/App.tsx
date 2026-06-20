@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ExecutiveLayout from "./layouts/ExecutiveLayout";
+import StaticLayout from "./layouts/StaticLayout";
 import InteractiveLayout from "./layouts/InteractiveLayout";
 import {
   readLayoutPreference,
@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     if (pendingLayoutFocus !== currentLayout) return;
 
-    const label = `${currentLayout === "executive" ? "Executive" : "Interactive"} layout`;
+    const label = `${currentLayout === "static" ? "Static" : "Interactive"} layout`;
     const activeChoice = document.querySelector<HTMLButtonElement>(
       `.layout-switcher button[aria-label="${label}"][aria-pressed="true"]`,
     );
@@ -35,9 +35,9 @@ function App() {
     writeLayoutPreference(nextLayout);
   };
 
-  if (currentLayout === "executive") {
+  if (currentLayout === "static") {
     return (
-      <ExecutiveLayout
+      <StaticLayout
         currentLayout={currentLayout}
         onLayoutChange={changeLayout}
       />
@@ -53,3 +53,4 @@ function App() {
 }
 
 export default App;
+

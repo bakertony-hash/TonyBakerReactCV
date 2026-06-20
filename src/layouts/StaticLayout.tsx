@@ -17,13 +17,13 @@ import {
 } from "../data/cv";
 import type { LayoutId } from "./layoutPreference";
 
-const executiveNav = [
-  { label: "Experience", href: "#executive-experience" },
-  { label: "Capabilities", href: "#executive-capabilities" },
-  { label: "Education", href: "#executive-education" },
+const staticNav = [
+  { label: "Experience", href: "#static-experience" },
+  { label: "Capabilities", href: "#static-capabilities" },
+  { label: "Education", href: "#static-education" },
 ];
 
-function ExecutiveLayout({
+function StaticLayout({
   currentLayout,
   onLayoutChange,
 }: {
@@ -34,36 +34,36 @@ function ExecutiveLayout({
   const phoneHref = profile.phone.replace(/\s/g, "");
 
   return (
-    <div className="executive-layout">
-      <header className="executive-header">
-        <a className="executive-wordmark" href="#executive-overview">
+    <div className="static-layout">
+      <header className="static-header">
+        <a className="static-wordmark" href="#static-overview">
           {profile.name}
         </a>
         <button
-          className="executive-menu-button"
+          className="static-menu-button"
           type="button"
           aria-expanded={menuOpen}
-          aria-controls="executive-navigation"
+          aria-controls="static-navigation"
           onClick={() => setMenuOpen((open) => !open)}
         >
           <Menu aria-hidden="true" />
           <span>Menu</span>
         </button>
         <nav
-          id="executive-navigation"
-          className={`executive-nav${menuOpen ? " executive-nav--open" : ""}`}
-          aria-label="Executive navigation"
+          id="static-navigation"
+          className={`static-nav${menuOpen ? " static-nav--open" : ""}`}
+          aria-label="static navigation"
         >
-          {executiveNav.map(({ label, href }) => (
+          {staticNav.map(({ label, href }) => (
             <a key={label} href={href} onClick={() => setMenuOpen(false)}>
               {label}
             </a>
           ))}
-          <a className="executive-nav-download" href="/Tony_Baker_CV.pdf" download>
+          <a className="static-nav-download" href="/Tony_Baker_CV.pdf" download>
             <Download aria-hidden="true" />
             Download CV
           </a>
-          <a className="executive-nav-contact" href={`mailto:${profile.email}`}>
+          <a className="static-nav-contact" href={`mailto:${profile.email}`}>
             <Mail aria-hidden="true" />
             Contact
           </a>
@@ -74,27 +74,27 @@ function ExecutiveLayout({
         />
       </header>
 
-      <main aria-label="Executive CV">
-        <section id="executive-overview" className="executive-hero">
-          <div className="executive-hero-copy">
-            <p className="executive-kicker">Distinguished Engineer</p>
+      <main aria-label="Static CV">
+        <section id="static-overview" className="static-hero">
+          <div className="static-hero-copy">
+            <p className="static-kicker">Distinguished Engineer</p>
             <h1>{profile.name}</h1>
-            <p className="executive-title">{profile.title}</p>
-            <p className="executive-location">
+            <p className="static-title">{profile.title}</p>
+            <p className="static-location">
               <MapPin aria-hidden="true" />
               {profile.location}
             </p>
-            <div className="executive-target-roles" aria-label="Target roles">
+            <div className="static-target-roles" aria-label="Target roles">
               {profile.targetRoles.map((role) => (
                 <span key={role}>{role}</span>
               ))}
             </div>
-            <div className="executive-summary">
+            <div className="static-summary">
               {profile.summary.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
-            <div className="executive-hero-actions">
+            <div className="static-hero-actions">
               <a href={`mailto:${profile.email}`}>
                 <Mail aria-hidden="true" />
                 Contact Tony
@@ -108,24 +108,24 @@ function ExecutiveLayout({
               </a>
             </div>
           </div>
-          <figure className="executive-portrait">
+          <figure className="static-portrait">
             <img src="/tony-baker-headshot.png" alt="Tony Baker" />
           </figure>
         </section>
 
         <section
-          className="executive-impact"
-          aria-labelledby="executive-impact-title"
+          className="static-impact"
+          aria-labelledby="static-impact-title"
         >
-          <h2 id="executive-impact-title" className="visually-hidden">
+          <h2 id="static-impact-title" className="visually-hidden">
             Measured impact
           </h2>
           {impactHighlights.map((highlight) => (
             <article
               key={highlight.label}
-              className={`executive-impact-card executive-impact-card--${highlight.theme}`}
+              className={`static-impact-card static-impact-card--${highlight.theme}`}
             >
-              <strong className="executive-impact-metric">{highlight.metric}</strong>
+              <strong className="static-impact-metric">{highlight.metric}</strong>
               <h3>{highlight.label}</h3>
               <p>{highlight.detail}</p>
             </article>
@@ -133,33 +133,33 @@ function ExecutiveLayout({
         </section>
 
         <section
-          id="executive-experience"
-          className="executive-section"
-          aria-labelledby="executive-experience-title"
+          id="static-experience"
+          className="static-section"
+          aria-labelledby="static-experience-title"
         >
-          <header className="executive-section-heading">
+          <header className="static-section-heading">
             <p>Career narrative</p>
-            <h2 id="executive-experience-title">Professional Experience</h2>
+            <h2 id="static-experience-title">Professional Experience</h2>
           </header>
-          <div className="executive-timeline">
+          <div className="static-timeline">
             {timeline.map((entry, index) => (
-              <article key={entry.id} className="executive-role">
-                <div className="executive-role-meta">
+              <article key={entry.id} className="static-role">
+                <div className="static-role-meta">
                   <span>{String(index + 1).padStart(2, "0")}</span>
                   <p>{entry.period}</p>
                   <p>{entry.location}</p>
                 </div>
-                <div className="executive-role-body">
-                  <p className="executive-company">{entry.company}</p>
+                <div className="static-role-body">
+                  <p className="static-company">{entry.company}</p>
                   <h3>{entry.role}</h3>
-                  <p className="executive-focus">{entry.focus}</p>
+                  <p className="static-focus">{entry.focus}</p>
                   <ul>
                     {entry.bullets.map((bullet) => (
                       <li key={bullet}>{bullet}</li>
                     ))}
                   </ul>
                   <div
-                    className="executive-tags"
+                    className="static-tags"
                     aria-label={`${entry.role} capabilities`}
                   >
                     {entry.tags.map((tag) => (
@@ -173,15 +173,15 @@ function ExecutiveLayout({
         </section>
 
         <section
-          id="executive-capabilities"
-          className="executive-section"
-          aria-labelledby="executive-capabilities-title"
+          id="static-capabilities"
+          className="static-section"
+          aria-labelledby="static-capabilities-title"
         >
-          <header className="executive-section-heading">
+          <header className="static-section-heading">
             <p>Technical range</p>
-            <h2 id="executive-capabilities-title">Engineering Capabilities</h2>
+            <h2 id="static-capabilities-title">Engineering Capabilities</h2>
           </header>
-          <div className="executive-capability-grid">
+          <div className="static-capability-grid">
             {expertise.map((category) => (
               <article key={category.id}>
                 <h3>{category.label}</h3>
@@ -197,17 +197,17 @@ function ExecutiveLayout({
         </section>
 
         <section
-          id="executive-education"
-          className="executive-section executive-education"
-          aria-labelledby="executive-education-title"
+          id="static-education"
+          className="static-section static-education"
+          aria-labelledby="static-education-title"
         >
-          <header className="executive-section-heading">
+          <header className="static-section-heading">
             <p>Academic foundation</p>
-            <h2 id="executive-education-title">Education</h2>
+            <h2 id="static-education-title">Education</h2>
           </header>
           <article>
             <img
-              className="executive-education-logo"
+              className="static-education-logo"
               src="/waikato-logo.svg"
               alt=""
             />
@@ -225,12 +225,12 @@ function ExecutiveLayout({
         </section>
       </main>
 
-      <footer className="executive-footer">
+      <footer className="static-footer">
         <div>
           <strong>{profile.name}</strong>
           <p>{availability}</p>
         </div>
-        <div className="executive-footer-links">
+        <div className="static-footer-links">
           <a href={`mailto:${profile.email}`}>{profile.email}</a>
           <a href={`tel:${phoneHref}`}>{profile.phone}</a>
           <a
@@ -251,4 +251,5 @@ function ExecutiveLayout({
   );
 }
 
-export default ExecutiveLayout;
+export default StaticLayout;
+

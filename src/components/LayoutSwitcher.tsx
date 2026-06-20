@@ -2,7 +2,7 @@ import type { LayoutId } from "../layouts/layoutPreference";
 
 const choices: { id: LayoutId; label: string }[] = [
   { id: "interactive", label: "Interactive" },
-  { id: "executive", label: "Executive" },
+  { id: "static", label: "Static" },
 ];
 
 function LayoutSwitcher({
@@ -39,3 +39,4 @@ function LayoutSwitcher({
 }
 
 export default LayoutSwitcher;
+

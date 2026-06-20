@@ -1,10 +1,10 @@
-# Selectable Executive CV Layout Implementation Plan
+# Selectable Static CV Layout Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a persistent Executive Editorial layout alongside the existing Interactive CV while both presentations reuse the authoritative data in `src/data/cv.ts`.
+**Goal:** Add a persistent Static Editorial layout alongside the existing Interactive CV while both presentations reuse the authoritative data in `src/data/cv.ts`.
 
-**Architecture:** `App` becomes a small layout host backed by a defensive local-storage preference module. The current page moves intact to `InteractiveLayout`, while a separate `ExecutiveLayout` renders every CV data group with its own semantic structure and scoped CSS. A shared `LayoutSwitcher` is rendered by both layouts so visitors can move between presentations without coupling their internal interactions.
+**Architecture:** `App` becomes a small layout host backed by a defensive local-storage preference module. The current page moves intact to `InteractiveLayout`, while a separate `StaticLayout` renders every CV data group with its own semantic structure and scoped CSS. A shared `LayoutSwitcher` is rendered by both layouts so visitors can move between presentations without coupling their internal interactions.
 
 **Tech Stack:** React 19, TypeScript, Vite 6, Vitest, Testing Library, Lucide React, CSS custom properties, ordinary responsive CSS
 
@@ -16,12 +16,12 @@
 - Create `src/layouts/layoutPreference.test.ts`: unit coverage for valid, invalid, absent, and failing storage.
 - Create `src/components/LayoutSwitcher.tsx`: accessible presentation selector shared by both layouts.
 - Create `src/layouts/InteractiveLayout.tsx`: current `App.tsx` presentation and interactions, moved without behavioural changes.
-- Create `src/layouts/ExecutiveLayout.tsx`: complete semantic Executive Editorial renderer backed by `cv.ts`.
-- Create `src/executive.css`: CSS tokens and responsive presentation scoped to `.executive-layout`.
+- Create `src/layouts/StaticLayout.tsx`: complete semantic Static Editorial renderer backed by `cv.ts`.
+- Create `src/static.css`: CSS tokens and responsive presentation scoped to `.static-layout`.
 - Modify `src/App.tsx`: initialize, persist, and render the chosen layout.
 - Modify `src/App.test.tsx`: cover selection/persistence and preserve the existing interactive regression suite.
 - Modify `src/styles.css`: add only shared layout-switcher rules and any extraction-safe global adjustments.
-- Modify `src/main.tsx`: import `executive.css` after the existing stylesheet.
+- Modify `src/main.tsx`: import `static.css` after the existing stylesheet.
 
 ## Task 1: Defensive Layout Preference
 
@@ -43,13 +43,13 @@ import {
 
 describe("layoutPreference", () => {
   it("returns a saved supported layout", () => {
-    const storage = { getItem: vi.fn(() => "executive") };
+    const storage = { getItem: vi.fn(() => "static") };
 
-    expect(readLayoutPreference(storage)).toBe("executive");
+    expect(readLayoutPreference(storage)).toBe("static");
     expect(storage.getItem).toHaveBeenCalledWith(LAYOUT_STORAGE_KEY);
   });
 
-  it.each([null, "", "magazine", "EXECUTIVE"])(
+  it.each([null, "", "magazine", "STATIC"])(
     "falls back to interactive for %s",
     (savedValue) => {
       const storage = { getItem: vi.fn(() => savedValue) };
@@ -70,11 +70,11 @@ describe("layoutPreference", () => {
   it("writes the selected layout", () => {
     const storage = { setItem: vi.fn() };
 
-    writeLayoutPreference("executive", storage);
+    writeLayoutPreference("static", storage);
 
     expect(storage.setItem).toHaveBeenCalledWith(
       LAYOUT_STORAGE_KEY,
-      "executive",
+      "static",
     );
   });
 
@@ -85,7 +85,7 @@ describe("layoutPreference", () => {
       }),
     };
 
-    expect(() => writeLayoutPreference("executive", storage)).not.toThrow();
+    expect(() => writeLayoutPreference("static", storage)).not.toThrow();
   });
 });
 ```
@@ -107,7 +107,7 @@ Create `src/layouts/layoutPreference.ts`:
 ```ts
 export const LAYOUT_STORAGE_KEY = "tony-baker-cv-layout";
 
-export const layoutIds = ["interactive", "executive"] as const;
+export const layoutIds = ["interactive", "static"] as const;
 export type LayoutId = (typeof layoutIds)[number];
 
 type ReadableStorage = Pick<Storage, "getItem">;
@@ -239,7 +239,7 @@ type LayoutSwitcherProps = {
 
 const choices: Array<{ id: LayoutId; label: string }> = [
   { id: "interactive", label: "Interactive" },
-  { id: "executive", label: "Executive" },
+  { id: "static", label: "Static" },
 ];
 
 function LayoutSwitcher({
@@ -312,7 +312,7 @@ git commit -m "refactor: isolate interactive CV layout"
 **Files:**
 - Modify: `src/App.tsx`
 - Modify: `src/App.test.tsx`
-- Create: `src/layouts/ExecutiveLayout.tsx`
+- Create: `src/layouts/StaticLayout.tsx`
 - Modify: `src/styles.css`
 
 - [ ] **Step 1: Add failing selection and persistence tests**
@@ -326,33 +326,33 @@ import { LAYOUT_STORAGE_KEY } from "./layouts/layoutPreference";
 Add these tests inside the `App` suite:
 
 ```ts
-it("switches to the Executive layout and persists the choice", async () => {
+it("switches to the Static layout and persists the choice", async () => {
   const user = userEvent.setup();
   render(<App />);
 
-  await user.click(screen.getByRole("button", { name: "Executive layout" }));
+  await user.click(screen.getByRole("button", { name: "Static layout" }));
 
   expect(
-    screen.getByRole("main", { name: "Executive CV" }),
+    screen.getByRole("main", { name: "Static CV" }),
   ).toBeInTheDocument();
-  expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("executive");
+  expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("static");
 });
 
-it("restores the saved Executive layout", () => {
-  window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+it("restores the saved Static layout", () => {
+  window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
 
   render(<App />);
 
   expect(
-    screen.getByRole("main", { name: "Executive CV" }),
+    screen.getByRole("main", { name: "Static CV" }),
   ).toBeInTheDocument();
   expect(
-    screen.getByRole("button", { name: "Executive layout" }),
+    screen.getByRole("button", { name: "Static layout" }),
   ).toHaveAttribute("aria-pressed", "true");
 });
 
 it("switches back to the Interactive layout", async () => {
-  window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+  window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
   const user = userEvent.setup();
   render(<App />);
 
@@ -373,13 +373,13 @@ pnpm test -- src/App.test.tsx
 
 Expected: the three new tests FAIL because `App` does not yet own layout state.
 
-- [ ] **Step 3: Add the layout host and initial Executive renderer**
+- [ ] **Step 3: Add the layout host and initial Static renderer**
 
 Replace `src/App.tsx` with:
 
 ```tsx
 import { useState } from "react";
-import ExecutiveLayout from "./layouts/ExecutiveLayout";
+import StaticLayout from "./layouts/StaticLayout";
 import InteractiveLayout from "./layouts/InteractiveLayout";
 import {
   readLayoutPreference,
@@ -395,9 +395,9 @@ function App() {
     writeLayoutPreference(nextLayout);
   };
 
-  if (layout === "executive") {
+  if (layout === "static") {
     return (
-      <ExecutiveLayout
+      <StaticLayout
         currentLayout={layout}
         onLayoutChange={changeLayout}
       />
@@ -415,26 +415,26 @@ function App() {
 export default App;
 ```
 
-Create the first valid `src/layouts/ExecutiveLayout.tsx`:
+Create the first valid `src/layouts/StaticLayout.tsx`:
 
 ```tsx
 import LayoutSwitcher from "../components/LayoutSwitcher";
 import { profile } from "../data/cv";
 import type { LayoutId } from "./layoutPreference";
 
-type ExecutiveLayoutProps = {
+type StaticLayoutProps = {
   currentLayout: LayoutId;
   onLayoutChange: (layout: LayoutId) => void;
 };
 
-function ExecutiveLayout({
+function StaticLayout({
   currentLayout,
   onLayoutChange,
-}: ExecutiveLayoutProps) {
+}: StaticLayoutProps) {
   return (
-    <div className="executive-layout">
-      <header className="executive-header">
-        <a href="#executive-overview" className="executive-wordmark">
+    <div className="static-layout">
+      <header className="static-header">
+        <a href="#static-overview" className="static-wordmark">
           {profile.name}
         </a>
         <LayoutSwitcher
@@ -442,7 +442,7 @@ function ExecutiveLayout({
           onLayoutChange={onLayoutChange}
         />
       </header>
-      <main aria-label="Executive CV" id="executive-overview">
+      <main aria-label="Static CV" id="static-overview">
         <h1>{profile.name}</h1>
         <p>{profile.title}</p>
       </main>
@@ -450,7 +450,7 @@ function ExecutiveLayout({
   );
 }
 
-export default ExecutiveLayout;
+export default StaticLayout;
 ```
 
 Add shared selector rules to the end of `src/styles.css`:
@@ -511,14 +511,14 @@ Expected: all existing tests and the three selection tests PASS.
 - [ ] **Step 5: Commit the working selector flow**
 
 ```powershell
-git add src/App.tsx src/App.test.tsx src/layouts/ExecutiveLayout.tsx src/styles.css
+git add src/App.tsx src/App.test.tsx src/layouts/StaticLayout.tsx src/styles.css
 git commit -m "feat: add selectable CV layouts"
 ```
 
-## Task 4: Build the Complete Data-Driven Executive Layout
+## Task 4: Build the Complete Data-Driven Static Layout
 
 **Files:**
-- Modify: `src/layouts/ExecutiveLayout.tsx`
+- Modify: `src/layouts/StaticLayout.tsx`
 - Modify: `src/App.test.tsx`
 
 - [ ] **Step 1: Add failing content-completeness tests**
@@ -538,8 +538,8 @@ import {
 Add this test:
 
 ```ts
-it("renders the complete CV data in the Executive layout", () => {
-  window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+it("renders the complete CV data in the Static layout", () => {
+  window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
   render(<App />);
 
   expect(screen.getByRole("heading", { level: 1, name: profile.name })).toBeInTheDocument();
@@ -566,7 +566,7 @@ it("renders the complete CV data in the Executive layout", () => {
 });
 
 it("does not render fabricated Stitch facts", () => {
-  window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+  window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
   render(<App />);
 
   expect(screen.queryByText("$40M")).not.toBeInTheDocument();
@@ -583,11 +583,11 @@ Run:
 pnpm test -- src/App.test.tsx
 ```
 
-Expected: the completeness test FAILS because the initial Executive renderer contains only the profile header.
+Expected: the completeness test FAILS because the initial Static renderer contains only the profile header.
 
 - [ ] **Step 3: Replace the initial renderer with the complete semantic layout**
 
-Replace `src/layouts/ExecutiveLayout.tsx` with:
+Replace `src/layouts/StaticLayout.tsx` with:
 
 ```tsx
 import {
@@ -610,53 +610,53 @@ import {
 } from "../data/cv";
 import type { LayoutId } from "./layoutPreference";
 
-type ExecutiveLayoutProps = {
+type StaticLayoutProps = {
   currentLayout: LayoutId;
   onLayoutChange: (layout: LayoutId) => void;
 };
 
-const executiveNav = [
-  { href: "#executive-experience", label: "Experience" },
-  { href: "#executive-capabilities", label: "Capabilities" },
-  { href: "#executive-education", label: "Education" },
+const staticNav = [
+  { href: "#static-experience", label: "Experience" },
+  { href: "#static-capabilities", label: "Capabilities" },
+  { href: "#static-education", label: "Education" },
 ];
 
-function ExecutiveLayout({
+function StaticLayout({
   currentLayout,
   onLayoutChange,
-}: ExecutiveLayoutProps) {
+}: StaticLayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="executive-layout">
-      <header className="executive-header">
-        <a className="executive-wordmark" href="#executive-overview">
+    <div className="static-layout">
+      <header className="static-header">
+        <a className="static-wordmark" href="#static-overview">
           {profile.name}
         </a>
         <button
-          className="executive-menu-button"
+          className="static-menu-button"
           type="button"
           aria-expanded={menuOpen}
-          aria-controls="executive-navigation"
+          aria-controls="static-navigation"
           onClick={() => setMenuOpen((open) => !open)}
         >
           <Menu size={20} aria-hidden="true" />
           <span>Menu</span>
         </button>
         <nav
-          id="executive-navigation"
-          className={menuOpen ? "executive-nav executive-nav--open" : "executive-nav"}
-          aria-label="Executive navigation"
+          id="static-navigation"
+          className={menuOpen ? "static-nav static-nav--open" : "static-nav"}
+          aria-label="Static navigation"
         >
-          {executiveNav.map((item) => (
+          {staticNav.map((item) => (
             <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
               {item.label}
             </a>
           ))}
-          <a className="executive-nav-download" href="/Tony_Baker_CV.pdf" download>
+          <a className="static-nav-download" href="/Tony_Baker_CV.pdf" download>
             Download CV
           </a>
-          <a className="executive-nav-contact" href={`mailto:${profile.email}`}>
+          <a className="static-nav-contact" href={`mailto:${profile.email}`}>
             Contact
           </a>
         </nav>
@@ -666,20 +666,20 @@ function ExecutiveLayout({
         />
       </header>
 
-      <main aria-label="Executive CV">
-        <section className="executive-hero" id="executive-overview">
-          <div className="executive-hero-copy">
-            <p className="executive-kicker">Distinguished Engineer</p>
+      <main aria-label="Static CV">
+        <section className="static-hero" id="static-overview">
+          <div className="static-hero-copy">
+            <p className="static-kicker">Distinguished Engineer</p>
             <h1>{profile.name}</h1>
-            <p className="executive-title">{profile.title}</p>
-            <p className="executive-location">
+            <p className="static-title">{profile.title}</p>
+            <p className="static-location">
               <MapPin size={15} aria-hidden="true" />
               {profile.location}
             </p>
-            <div className="executive-summary">
+            <div className="static-summary">
               {profile.summary.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
-            <div className="executive-hero-actions">
+            <div className="static-hero-actions">
               <a href={`mailto:${profile.email}`}>
                 <Mail size={17} aria-hidden="true" /> Contact Tony
               </a>
@@ -688,13 +688,13 @@ function ExecutiveLayout({
               </a>
             </div>
           </div>
-          <figure className="executive-portrait">
+          <figure className="static-portrait">
             <img src="/tony-baker-headshot.png" alt="Tony Baker" />
           </figure>
         </section>
 
-        <section className="executive-impact" aria-labelledby="executive-impact-title">
-          <h2 className="visually-hidden" id="executive-impact-title">Measured impact</h2>
+        <section className="static-impact" aria-labelledby="static-impact-title">
+          <h2 className="visually-hidden" id="static-impact-title">Measured impact</h2>
           {impactHighlights.map((highlight) => (
             <article key={highlight.label}>
               <strong>{highlight.metric}</strong>
@@ -704,27 +704,27 @@ function ExecutiveLayout({
           ))}
         </section>
 
-        <section className="executive-section" id="executive-experience" aria-labelledby="executive-experience-title">
-          <header className="executive-section-heading">
+        <section className="static-section" id="static-experience" aria-labelledby="static-experience-title">
+          <header className="static-section-heading">
             <p>Career narrative</p>
-            <h2 id="executive-experience-title">Professional Experience</h2>
+            <h2 id="static-experience-title">Professional Experience</h2>
           </header>
-          <div className="executive-timeline">
+          <div className="static-timeline">
             {timeline.map((entry, index) => (
-              <article className="executive-role" key={entry.id}>
-                <div className="executive-role-meta">
+              <article className="static-role" key={entry.id}>
+                <div className="static-role-meta">
                   <span>{String(index + 1).padStart(2, "0")}</span>
                   <p>{entry.period}</p>
                   <p>{entry.location}</p>
                 </div>
-                <div className="executive-role-body">
-                  <p className="executive-company">{entry.company}</p>
+                <div className="static-role-body">
+                  <p className="static-company">{entry.company}</p>
                   <h3>{entry.role}</h3>
-                  <p className="executive-focus">{entry.focus}</p>
+                  <p className="static-focus">{entry.focus}</p>
                   <ul>
                     {entry.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
                   </ul>
-                  <div className="executive-tags" aria-label={`${entry.role} capabilities`}>
+                  <div className="static-tags" aria-label={`${entry.role} capabilities`}>
                     {entry.tags.map((tag) => <span key={tag}>{tag}</span>)}
                   </div>
                 </div>
@@ -733,12 +733,12 @@ function ExecutiveLayout({
           </div>
         </section>
 
-        <section className="executive-section" id="executive-capabilities" aria-labelledby="executive-capabilities-title">
-          <header className="executive-section-heading">
+        <section className="static-section" id="static-capabilities" aria-labelledby="static-capabilities-title">
+          <header className="static-section-heading">
             <p>Technical range</p>
-            <h2 id="executive-capabilities-title">Engineering Capabilities</h2>
+            <h2 id="static-capabilities-title">Engineering Capabilities</h2>
           </header>
-          <div className="executive-capability-grid">
+          <div className="static-capability-grid">
             {expertise.map((category) => (
               <article key={category.id}>
                 <h3>{category.label}</h3>
@@ -751,10 +751,10 @@ function ExecutiveLayout({
           </div>
         </section>
 
-        <section className="executive-section executive-education" id="executive-education" aria-labelledby="executive-education-title">
-          <header className="executive-section-heading">
+        <section className="static-section static-education" id="static-education" aria-labelledby="static-education-title">
+          <header className="static-section-heading">
             <p>Academic foundation</p>
-            <h2 id="executive-education-title">Education</h2>
+            <h2 id="static-education-title">Education</h2>
           </header>
           <article>
             <GraduationCap size={28} aria-hidden="true" />
@@ -768,12 +768,12 @@ function ExecutiveLayout({
         </section>
       </main>
 
-      <footer className="executive-footer">
+      <footer className="static-footer">
         <div>
           <strong>{profile.name}</strong>
           <p>{availability}</p>
         </div>
-        <div className="executive-footer-links">
+        <div className="static-footer-links">
           <a href={`mailto:${profile.email}`}>{profile.email}</a>
           <a href={`tel:${profile.phone.replace(/\s/g, "")}`}>{profile.phone}</a>
           <a href={`https://${profile.linkedin}`} target="_blank" rel="noreferrer">
@@ -786,7 +786,7 @@ function ExecutiveLayout({
   );
 }
 
-export default ExecutiveLayout;
+export default StaticLayout;
 ```
 
 - [ ] **Step 4: Run the content tests**
@@ -799,21 +799,21 @@ pnpm test -- src/App.test.tsx
 
 Expected: completeness and fabricated-fact tests PASS along with the existing suite.
 
-- [ ] **Step 5: Commit the complete Executive structure**
+- [ ] **Step 5: Commit the complete Static structure**
 
 ```powershell
-git add src/layouts/ExecutiveLayout.tsx src/App.test.tsx
-git commit -m "feat: render executive CV from shared data"
+git add src/layouts/StaticLayout.tsx src/App.test.tsx
+git commit -m "feat: render static CV from shared data"
 ```
 
 ## Task 5: Apply the Stitch Editorial System Responsively
 
 **Files:**
-- Create: `src/executive.css`
+- Create: `src/static.css`
 - Modify: `src/main.tsx`
 - Modify: `src/styles.css`
 
-- [ ] **Step 1: Add the Executive stylesheet import**
+- [ ] **Step 1: Add the Static stylesheet import**
 
 Update `src/main.tsx` so style order is explicit:
 
@@ -822,7 +822,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./styles.css";
-import "./executive.css";
+import "./static.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -831,64 +831,64 @@ createRoot(document.getElementById("root")!).render(
 );
 ```
 
-- [ ] **Step 2: Create scoped Executive tokens and desktop composition**
+- [ ] **Step 2: Create scoped Static tokens and desktop composition**
 
-Create `src/executive.css` using the Stitch design reference values:
+Create `src/static.css` using the Stitch design reference values:
 
 ```css
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap");
 
-.executive-layout {
-  --executive-paper: #faf9f6;
-  --executive-paper-raised: #ffffff;
-  --executive-slate: #f1f0ea;
-  --executive-ink: #1a1a1a;
-  --executive-muted: #5e5f5d;
-  --executive-line: #d1d1cb;
-  --executive-gold: #c5a059;
-  --executive-copper: #b87333;
+.static-layout {
+  --static-paper: #faf9f6;
+  --static-paper-raised: #ffffff;
+  --static-slate: #f1f0ea;
+  --static-ink: #1a1a1a;
+  --static-muted: #5e5f5d;
+  --static-line: #d1d1cb;
+  --static-gold: #c5a059;
+  --static-copper: #b87333;
   min-height: 100vh;
-  background: var(--executive-paper);
-  color: var(--executive-ink);
+  background: var(--static-paper);
+  color: var(--static-ink);
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
-.executive-layout h1,
-.executive-layout h2,
-.executive-layout h3,
-.executive-layout p {
+.static-layout h1,
+.static-layout h2,
+.static-layout h3,
+.static-layout p {
   margin-top: 0;
 }
 
-.executive-layout h1,
-.executive-layout h2,
-.executive-role-body h3 {
+.static-layout h1,
+.static-layout h2,
+.static-role-body h3 {
   font-family: "Playfair Display", Georgia, serif;
 }
 
-.executive-header,
-.executive-layout main,
-.executive-footer {
+.static-header,
+.static-layout main,
+.static-footer {
   width: min(calc(100% - 128px), 1200px);
   margin-inline: auto;
 }
 
-.executive-header {
+.static-header {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 32px;
   min-height: 76px;
-  border-bottom: 1px solid var(--executive-line);
+  border-bottom: 1px solid var(--static-line);
 }
 
-.executive-wordmark {
+.static-wordmark {
   font-family: "Playfair Display", Georgia, serif;
   font-size: 1.15rem;
   font-weight: 700;
 }
 
-.executive-nav {
+.static-nav {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -899,108 +899,108 @@ Create `src/executive.css` using the Stitch design reference values:
   text-transform: uppercase;
 }
 
-.executive-nav a,
-.executive-footer a {
-  color: var(--executive-ink);
+.static-nav a,
+.static-footer a {
+  color: var(--static-ink);
 }
 
-.executive-nav-download,
-.executive-nav-contact,
-.executive-hero-actions a {
+.static-nav-download,
+.static-nav-contact,
+.static-hero-actions a {
   display: inline-flex;
   min-height: 38px;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1px solid var(--executive-ink);
+  border: 1px solid var(--static-ink);
   border-radius: 4px;
   padding: 0 14px;
 }
 
-.executive-nav-contact,
-.executive-hero-actions a:first-child {
-  background: var(--executive-ink);
-  color: var(--executive-paper);
+.static-nav-contact,
+.static-hero-actions a:first-child {
+  background: var(--static-ink);
+  color: var(--static-paper);
 }
 
-.executive-menu-button {
+.static-menu-button {
   display: none;
 }
 
-.executive-hero {
+.static-hero {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(260px, 4fr);
   gap: 88px;
   align-items: center;
   min-height: 600px;
-  border-bottom: 1px solid var(--executive-line);
+  border-bottom: 1px solid var(--static-line);
   padding-block: 72px;
 }
 
-.executive-kicker,
-.executive-section-heading > p,
-.executive-company,
-.executive-role-meta,
-.executive-tags,
-.executive-impact h3 {
+.static-kicker,
+.static-section-heading > p,
+.static-company,
+.static-role-meta,
+.static-tags,
+.static-impact h3 {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.executive-kicker,
-.executive-section-heading > p,
-.executive-company {
-  color: var(--executive-copper);
+.static-kicker,
+.static-section-heading > p,
+.static-company {
+  color: var(--static-copper);
   font-size: 0.72rem;
   font-weight: 600;
 }
 
-.executive-hero h1 {
+.static-hero h1 {
   margin-bottom: 10px;
   font-size: clamp(4rem, 8vw, 7.25rem);
   line-height: 0.88;
   letter-spacing: -0.055em;
 }
 
-.executive-title {
+.static-title {
   font-family: "Playfair Display", Georgia, serif;
   font-size: clamp(1.2rem, 2.2vw, 1.75rem);
   font-style: italic;
 }
 
-.executive-location {
+.static-location {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: var(--executive-muted);
+  color: var(--static-muted);
   font-size: 0.82rem;
 }
 
-.executive-summary {
+.static-summary {
   max-width: 720px;
-  border-left: 2px solid var(--executive-copper);
+  border-left: 2px solid var(--static-copper);
   margin-block: 36px;
   padding-left: 24px;
-  color: var(--executive-muted);
+  color: var(--static-muted);
   font-size: 1rem;
   line-height: 1.75;
 }
 
-.executive-hero-actions {
+.static-hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
 
-.executive-portrait {
+.static-portrait {
   margin: 0;
-  border: 1px solid var(--executive-line);
-  background: var(--executive-slate);
+  border: 1px solid var(--static-line);
+  background: var(--static-slate);
   padding: 12px;
 }
 
-.executive-portrait img {
+.static-portrait img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 5;
@@ -1009,47 +1009,47 @@ Create `src/executive.css` using the Stitch design reference values:
   filter: saturate(0.74) contrast(1.04);
 }
 
-.executive-impact {
+.static-impact {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1px solid var(--executive-line);
+  border-bottom: 1px solid var(--static-line);
   padding-block: 44px;
 }
 
-.executive-impact article {
+.static-impact article {
   min-width: 0;
-  border-right: 1px solid var(--executive-line);
+  border-right: 1px solid var(--static-line);
   padding: 0 24px;
 }
 
-.executive-impact article:first-of-type { padding-left: 0; }
-.executive-impact article:last-child { border-right: 0; }
+.static-impact article:first-of-type { padding-left: 0; }
+.static-impact article:last-child { border-right: 0; }
 
-.executive-impact strong {
+.static-impact strong {
   display: block;
-  color: var(--executive-copper);
+  color: var(--static-copper);
   font-family: "Playfair Display", Georgia, serif;
   font-size: clamp(2.4rem, 5vw, 4rem);
   line-height: 1;
 }
 
-.executive-impact h3 {
+.static-impact h3 {
   margin-block: 10px;
   font-size: 0.65rem;
 }
 
-.executive-impact p {
-  color: var(--executive-muted);
+.static-impact p {
+  color: var(--static-muted);
   font-size: 0.78rem;
   line-height: 1.55;
 }
 
-.executive-section {
+.static-section {
   padding-block: 96px;
-  border-bottom: 1px solid var(--executive-line);
+  border-bottom: 1px solid var(--static-line);
 }
 
-.executive-section-heading {
+.static-section-heading {
   display: grid;
   grid-template-columns: 2fr 10fr;
   align-items: baseline;
@@ -1057,97 +1057,97 @@ Create `src/executive.css` using the Stitch design reference values:
   margin-bottom: 48px;
 }
 
-.executive-section-heading h2 {
+.static-section-heading h2 {
   margin-bottom: 0;
   font-size: clamp(2.4rem, 5vw, 4.5rem);
   letter-spacing: -0.035em;
 }
 
-.executive-role {
+.static-role {
   display: grid;
   grid-template-columns: 2fr 10fr;
   gap: 24px;
-  border-top: 1px solid var(--executive-line);
+  border-top: 1px solid var(--static-line);
   padding-block: 42px;
 }
 
-.executive-role-meta {
-  color: var(--executive-muted);
+.static-role-meta {
+  color: var(--static-muted);
   font-size: 0.66rem;
   line-height: 1.6;
 }
 
-.executive-role-meta span {
+.static-role-meta span {
   display: block;
   margin-bottom: 20px;
-  color: var(--executive-copper);
+  color: var(--static-copper);
   font-family: "Playfair Display", Georgia, serif;
   font-size: 1.4rem;
 }
 
-.executive-role-body h3 {
+.static-role-body h3 {
   margin-bottom: 8px;
   font-size: clamp(1.65rem, 3vw, 2.5rem);
 }
 
-.executive-focus {
-  color: var(--executive-muted);
+.static-focus {
+  color: var(--static-muted);
   font-weight: 600;
 }
 
-.executive-role-body ul {
+.static-role-body ul {
   columns: 2;
   column-gap: 44px;
   margin-block: 26px;
   padding-left: 20px;
 }
 
-.executive-role-body li {
+.static-role-body li {
   break-inside: avoid;
   margin-bottom: 14px;
-  color: var(--executive-muted);
+  color: var(--static-muted);
   line-height: 1.58;
 }
 
-.executive-role-body li::marker { color: var(--executive-gold); }
+.static-role-body li::marker { color: var(--static-gold); }
 
-.executive-tags {
+.static-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
   font-size: 0.62rem;
 }
 
-.executive-tags span {
-  border: 1px solid var(--executive-line);
+.static-tags span {
+  border: 1px solid var(--static-line);
   border-radius: 2px;
-  background: var(--executive-slate);
+  background: var(--static-slate);
   padding: 6px 8px;
 }
 
-.executive-capability-grid {
+.static-capability-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  border-top: 1px solid var(--executive-line);
-  border-left: 1px solid var(--executive-line);
+  border-top: 1px solid var(--static-line);
+  border-left: 1px solid var(--static-line);
 }
 
-.executive-capability-grid article {
-  border-right: 1px solid var(--executive-line);
-  border-bottom: 1px solid var(--executive-line);
+.static-capability-grid article {
+  border-right: 1px solid var(--static-line);
+  border-bottom: 1px solid var(--static-line);
   padding: 30px;
 }
 
-.executive-capability-grid h3 {
+.static-capability-grid h3 {
   font-size: 1.35rem;
 }
 
-.executive-capability-grid p {
-  color: var(--executive-muted);
+.static-capability-grid p {
+  color: var(--static-muted);
   line-height: 1.6;
 }
 
-.executive-capability-grid ul {
+.static-capability-grid ul {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -1156,91 +1156,91 @@ Create `src/executive.css` using the Stitch design reference values:
   list-style: none;
 }
 
-.executive-capability-grid li {
-  border-bottom: 1px solid var(--executive-gold);
+.static-capability-grid li {
+  border-bottom: 1px solid var(--static-gold);
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.68rem;
   padding-bottom: 3px;
 }
 
-.executive-education > article {
+.static-education > article {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 22px;
-  border: 1px solid var(--executive-line);
+  border: 1px solid var(--static-line);
   padding: 30px;
 }
 
-.executive-education h3 {
+.static-education h3 {
   margin-bottom: 6px;
   font-size: 1.5rem;
 }
 
-.executive-education p,
-.executive-education li {
-  color: var(--executive-muted);
+.static-education p,
+.static-education li {
+  color: var(--static-muted);
 }
 
-.executive-footer {
+.static-footer {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 48px;
   padding-block: 42px;
 }
 
-.executive-footer p {
+.static-footer p {
   max-width: 680px;
-  color: var(--executive-muted);
+  color: var(--static-muted);
   line-height: 1.6;
 }
 
-.executive-footer-links {
+.static-footer-links {
   display: grid;
   justify-items: end;
   gap: 8px;
   font-size: 0.78rem;
 }
 
-.executive-layout a,
-.executive-layout button {
+.static-layout a,
+.static-layout button {
   transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
 }
 
-.executive-layout a:hover { color: var(--executive-copper); }
+.static-layout a:hover { color: var(--static-copper); }
 
-.executive-layout a:focus-visible,
-.executive-layout button:focus-visible {
-  outline: 3px solid var(--executive-gold);
+.static-layout a:focus-visible,
+.static-layout button:focus-visible {
+  outline: 3px solid var(--static-gold);
   outline-offset: 4px;
 }
 ```
 
 - [ ] **Step 3: Add tablet, mobile, and reduced-motion rules**
 
-Append to `src/executive.css`:
+Append to `src/static.css`:
 
 ```css
 @media (max-width: 960px) {
-  .executive-header,
-  .executive-layout main,
-  .executive-footer {
+  .static-header,
+  .static-layout main,
+  .static-footer {
     width: min(calc(100% - 48px), 760px);
   }
 
-  .executive-header {
+  .static-header {
     grid-template-columns: 1fr auto auto;
   }
 
-  .executive-menu-button {
+  .static-menu-button {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    border: 1px solid var(--executive-line);
+    border: 1px solid var(--static-line);
     background: transparent;
     padding: 9px 12px;
   }
 
-  .executive-nav {
+  .static-nav {
     position: absolute;
     top: 68px;
     right: 24px;
@@ -1248,116 +1248,116 @@ Append to `src/executive.css`:
     display: none;
     width: min(320px, calc(100vw - 48px));
     align-items: stretch;
-    border: 1px solid var(--executive-line);
-    background: var(--executive-paper-raised);
+    border: 1px solid var(--static-line);
+    background: var(--static-paper-raised);
     padding: 18px;
     box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
   }
 
-  .executive-nav--open {
+  .static-nav--open {
     display: grid;
   }
 
-  .executive-nav a { padding: 10px; }
+  .static-nav a { padding: 10px; }
 
-  .executive-hero {
+  .static-hero {
     grid-template-columns: minmax(0, 1fr) 240px;
     gap: 40px;
   }
 
-  .executive-role-body ul { columns: 1; }
+  .static-role-body ul { columns: 1; }
 }
 
 @media (max-width: 640px) {
-  .executive-header,
-  .executive-layout main,
-  .executive-footer {
+  .static-header,
+  .static-layout main,
+  .static-footer {
     width: min(calc(100% - 32px), 520px);
   }
 
-  .executive-header {
+  .static-header {
     min-height: 64px;
     gap: 8px;
   }
 
-  .executive-wordmark { font-size: 0.95rem; }
-  .executive-menu-button span { display: none; }
+  .static-wordmark { font-size: 0.95rem; }
+  .static-menu-button span { display: none; }
 
-  .executive-header .layout-switcher {
+  .static-header .layout-switcher {
     gap: 2px;
   }
 
-  .executive-header .layout-switcher button {
+  .static-header .layout-switcher button {
     min-height: 34px;
     padding: 0 6px;
     font-size: 0.7rem;
   }
 
-  .executive-hero {
+  .static-hero {
     grid-template-columns: 1fr;
     gap: 32px;
     padding-block: 48px;
   }
 
-  .executive-hero h1 { font-size: clamp(3.4rem, 17vw, 5rem); }
+  .static-hero h1 { font-size: clamp(3.4rem, 17vw, 5rem); }
 
-  .executive-portrait {
+  .static-portrait {
     order: -1;
     width: min(72%, 270px);
   }
 
-  .executive-impact {
+  .static-impact {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .executive-impact article {
+  .static-impact article {
     border-right: 0;
-    border-bottom: 1px solid var(--executive-line);
+    border-bottom: 1px solid var(--static-line);
     padding: 22px 12px;
   }
 
-  .executive-impact article:nth-child(odd) {
-    border-right: 1px solid var(--executive-line);
+  .static-impact article:nth-child(odd) {
+    border-right: 1px solid var(--static-line);
     padding-left: 0;
   }
 
-  .executive-section { padding-block: 64px; }
+  .static-section { padding-block: 64px; }
 
-  .executive-section-heading,
-  .executive-role {
+  .static-section-heading,
+  .static-role {
     grid-template-columns: 1fr;
   }
 
-  .executive-section-heading { gap: 8px; }
+  .static-section-heading { gap: 8px; }
 
-  .executive-role-meta {
+  .static-role-meta {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 8px 16px;
   }
 
-  .executive-role-meta span {
+  .static-role-meta span {
     grid-row: 1 / 3;
     margin: 0;
   }
 
-  .executive-capability-grid { grid-template-columns: 1fr; }
+  .static-capability-grid { grid-template-columns: 1fr; }
 
-  .executive-footer {
+  .static-footer {
     grid-template-columns: 1fr;
   }
 
-  .executive-footer-links { justify-items: start; }
+  .static-footer-links { justify-items: start; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .executive-layout {
+  .static-layout {
     scroll-behavior: auto;
   }
 
-  .executive-layout *,
-  .executive-layout *::before,
-  .executive-layout *::after {
+  .static-layout *,
+  .static-layout *::before,
+  .static-layout *::after {
     transition-duration: 0.01ms !important;
   }
 }
@@ -1401,13 +1401,13 @@ Open the local URL and verify at 1440px and 390px against:
 - `docs/stitch-reference/executive_cv_desktop/screen.png`
 - `docs/stitch-reference/executive_cv_mobile/screen.png`
 
-Check typography, section rhythm, portrait crop, impact strip, chronology reflow, capability grid, mobile menu, layout selector, and footer. Adjust only `src/executive.css` for visual mismatches unless the semantic structure is the cause.
+Check typography, section rhythm, portrait crop, impact strip, chronology reflow, capability grid, mobile menu, layout selector, and footer. Adjust only `src/static.css` for visual mismatches unless the semantic structure is the cause.
 
 - [ ] **Step 6: Commit the responsive visual system**
 
 ```powershell
-git add src/executive.css src/main.tsx src/styles.css
-git commit -m "feat: style responsive executive CV layout"
+git add src/static.css src/main.tsx src/styles.css
+git commit -m "feat: style responsive static CV layout"
 ```
 
 ## Task 6: Full Accessibility and Regression Verification
@@ -1432,8 +1432,8 @@ Using the local development site, complete this exact sequence:
 
 1. Reload with storage cleared and confirm Interactive renders.
 2. Tab to the layout selector; verify a visible focus ring.
-3. Activate Executive using the keyboard.
-4. Reload and confirm Executive is restored.
+3. Activate Static using the keyboard.
+4. Reload and confirm Static is restored.
 5. Traverse header navigation, download, contact, role content, capabilities, education, and footer links.
 6. At 390px, open and close the menu with keyboard controls and select a section link.
 7. Switch back to Interactive and verify its timeline, expertise tabs, section highlights, and light/dark toggle.
@@ -1450,7 +1450,7 @@ rg -n '\$40M|200\+|99\.99%|VP of Infrastructure|Staff Engineer' src
 
 Expected: no matches.
 
-Confirm every `timeline` entry, every achievement bullet, every expertise category, all four impact metrics, education distinctions, availability, contact links, and PDF download appear in the Executive presentation.
+Confirm every `timeline` entry, every achievement bullet, every expertise category, all four impact metrics, education distinctions, availability, contact links, and PDF download appear in the Static presentation.
 
 - [ ] **Step 4: Inspect the final working tree**
 
@@ -1468,8 +1468,9 @@ Expected: no whitespace errors. Only intentional files are modified; `docs/stitc
 If verification required code or test corrections, commit only those files:
 
 ```powershell
-git add src/App.test.tsx src/App.tsx src/components/LayoutSwitcher.tsx src/layouts src/styles.css src/executive.css src/main.tsx
-git commit -m "fix: complete executive layout verification"
+git add src/App.test.tsx src/App.tsx src/components/LayoutSwitcher.tsx src/layouts src/styles.css src/static.css src/main.tsx
+git commit -m "fix: complete static layout verification"
 ```
 
 If no corrections were required, do not create an empty commit.
+

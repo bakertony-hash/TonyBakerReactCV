@@ -19,36 +19,36 @@ beforeEach(() => {
 
 // Top-level suite for the main application component and its interactive behavior.
 describe("App", () => {
-  it("switches to the executive layout and saves the preference", async () => {
+  it("switches to the Static layout and saves the preference", async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole("button", { name: "Executive layout" }));
+    await user.click(screen.getByRole("button", { name: "Static layout" }));
 
-    expect(screen.getByRole("main", { name: "Executive CV" })).toBeInTheDocument();
-    const executiveChoice = screen.getByRole("button", {
-      name: "Executive layout",
+    expect(screen.getByRole("main", { name: "Static CV" })).toBeInTheDocument();
+    const staticChoice = screen.getByRole("button", {
+      name: "Static layout",
     });
-    await waitFor(() => expect(executiveChoice).toHaveFocus());
-    expect(executiveChoice).toHaveAttribute("aria-pressed", "true");
-    expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("executive");
+    await waitFor(() => expect(staticChoice).toHaveFocus());
+    expect(staticChoice).toHaveAttribute("aria-pressed", "true");
+    expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("static");
   });
 
-  it("restores a saved executive layout preference", () => {
-    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+  it("restores a saved Static layout preference", () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
 
     render(<App />);
 
-    expect(screen.getByRole("main", { name: "Executive CV" })).toBeInTheDocument();
-    const executiveChoice = screen.getByRole("button", {
-      name: "Executive layout",
+    expect(screen.getByRole("main", { name: "Static CV" })).toBeInTheDocument();
+    const staticChoice = screen.getByRole("button", {
+      name: "Static layout",
     });
-    expect(executiveChoice).toHaveAttribute("aria-pressed", "true");
-    expect(executiveChoice).not.toHaveFocus();
+    expect(staticChoice).toHaveAttribute("aria-pressed", "true");
+    expect(staticChoice).not.toHaveFocus();
   });
 
-  it("renders the complete CV data in the Executive layout", () => {
-    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+  it("renders the complete CV data in the Static layout", () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
 
     const { container } = render(<App />);
 
@@ -147,7 +147,7 @@ describe("App", () => {
   });
 
   it("does not render fabricated Stitch facts", () => {
-    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
 
     const { container } = render(<App />);
 
@@ -164,51 +164,51 @@ describe("App", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("matches the Executive layout design structure", () => {
-    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+  it("matches the Static layout design structure", () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
 
     const { container } = render(<App />);
 
-    const nav = container.querySelector("#executive-navigation");
-    expect(nav).toHaveClass("executive-nav");
-    expect(nav?.querySelector(".executive-nav-download")).toHaveAttribute("download");
-    expect(nav?.querySelector(".executive-nav-contact")).toHaveAttribute(
+    const nav = container.querySelector("#static-navigation");
+    expect(nav).toHaveClass("static-nav");
+    expect(nav?.querySelector(".static-nav-download")).toHaveAttribute("download");
+    expect(nav?.querySelector(".static-nav-contact")).toHaveAttribute(
       "href",
       `mailto:${profile.email}`,
     );
     expect(
-      container.querySelector(".executive-menu-button > svg + span"),
+      container.querySelector(".static-menu-button > svg + span"),
     ).toHaveTextContent("Menu");
 
-    expect(container.querySelector(".executive-hero-copy .executive-summary")).not.toBeNull();
-    expect(container.querySelector("figure.executive-portrait img")).toHaveAttribute(
+    expect(container.querySelector(".static-hero-copy .static-summary")).not.toBeNull();
+    expect(container.querySelector("figure.static-portrait img")).toHaveAttribute(
       "src",
       "/tony-baker-headshot.png",
     );
     expect(
-      within(container.querySelector(".executive-hero-actions") as HTMLElement).getByRole(
+      within(container.querySelector(".static-hero-actions") as HTMLElement).getByRole(
         "link",
         { name: "Download CV" },
       ),
     ).toHaveAttribute("download");
 
-    const impact = container.querySelector("section.executive-impact");
-    expect(impact).toHaveAttribute("aria-labelledby", "executive-impact-title");
-    expect(impact?.querySelector("#executive-impact-title")).toHaveTextContent(
+    const impact = container.querySelector("section.static-impact");
+    expect(impact).toHaveAttribute("aria-labelledby", "static-impact-title");
+    expect(impact?.querySelector("#static-impact-title")).toHaveTextContent(
       "Measured impact",
     );
     expect(impact?.querySelectorAll("article strong")).toHaveLength(impactHighlights.length);
 
-    const experience = container.querySelector("#executive-experience");
-    expect(experience).toHaveClass("executive-section");
-    expect(experience).toHaveAttribute("aria-labelledby", "executive-experience-title");
-    expect(experience?.querySelector(".executive-section-heading p")).toHaveTextContent(
+    const experience = container.querySelector("#static-experience");
+    expect(experience).toHaveClass("static-section");
+    expect(experience).toHaveAttribute("aria-labelledby", "static-experience-title");
+    expect(experience?.querySelector(".static-section-heading p")).toHaveTextContent(
       "Career narrative",
     );
-    expect(experience?.querySelector(".executive-timeline")).not.toBeNull();
-    expect(experience?.querySelectorAll(".executive-role-body")).toHaveLength(timeline.length);
+    expect(experience?.querySelector(".static-timeline")).not.toBeNull();
+    expect(experience?.querySelectorAll(".static-role-body")).toHaveLength(timeline.length);
     for (const [index, metadata] of Array.from(
-      experience?.querySelectorAll(".executive-role-meta") ?? [],
+      experience?.querySelectorAll(".static-role-meta") ?? [],
     ).entries()) {
       expect(metadata.firstElementChild).toMatchObject({ tagName: "SPAN" });
       expect(metadata.firstElementChild).toHaveTextContent(
@@ -216,39 +216,39 @@ describe("App", () => {
       );
     }
 
-    const capabilities = container.querySelector("#executive-capabilities");
-    expect(capabilities).toHaveClass("executive-section");
+    const capabilities = container.querySelector("#static-capabilities");
+    expect(capabilities).toHaveClass("static-section");
     expect(capabilities).toHaveAttribute(
       "aria-labelledby",
-      "executive-capabilities-title",
+      "static-capabilities-title",
     );
-    expect(capabilities?.querySelector(".executive-section-heading p")).toHaveTextContent(
+    expect(capabilities?.querySelector(".static-section-heading p")).toHaveTextContent(
       "Technical range",
     );
-    expect(capabilities?.querySelector(".executive-capability-grid")).not.toBeNull();
+    expect(capabilities?.querySelector(".static-capability-grid")).not.toBeNull();
 
-    const educationSection = container.querySelector("#executive-education");
-    expect(educationSection).toHaveClass("executive-section", "executive-education");
+    const educationSection = container.querySelector("#static-education");
+    expect(educationSection).toHaveClass("static-section", "static-education");
     expect(educationSection).toHaveAttribute(
       "aria-labelledby",
-      "executive-education-title",
+      "static-education-title",
     );
-    expect(educationSection?.querySelector(".executive-section-heading p")).toHaveTextContent(
+    expect(educationSection?.querySelector(".static-section-heading p")).toHaveTextContent(
       "Academic foundation",
     );
 
-    expect(container.querySelector(".executive-footer > div:first-child strong")).toHaveTextContent(
+    expect(container.querySelector(".static-footer > div:first-child strong")).toHaveTextContent(
       profile.name,
     );
-    const footerLinks = container.querySelector(".executive-footer-links");
+    const footerLinks = container.querySelector(".static-footer-links");
     expect(within(footerLinks as HTMLElement).getByRole("link", { name: /LinkedIn/i })).toHaveAttribute(
       "href",
       `https://${profile.linkedin}`,
     );
   });
 
-  it("switches from a saved executive layout to the interactive layout", async () => {
-    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+  it("switches from a saved Static layout to the interactive layout", async () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
     const user = userEvent.setup();
     render(<App />);
 
@@ -263,8 +263,8 @@ describe("App", () => {
     expect(window.localStorage.getItem(LAYOUT_STORAGE_KEY)).toBe("interactive");
   });
 
-  it("closes the Executive menu after navigating to Experience", async () => {
-    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "executive");
+  it("closes the static menu after navigating to Experience", async () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
     const user = userEvent.setup();
     render(<App />);
 
@@ -276,7 +276,7 @@ describe("App", () => {
 
     await user.click(screen.getByRole("link", { name: "Experience" }));
     expect(menuButton).toHaveAttribute("aria-expanded", "false");
-    expect(window.location.hash).toBe("#executive-experience");
+    expect(window.location.hash).toBe("#static-experience");
   });
 
   // Verify the top-level profile summary, career impact metrics, and primary call-to-action links.
@@ -391,3 +391,4 @@ describe("App", () => {
     }
   });
 });
+

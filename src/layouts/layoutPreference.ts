@@ -1,6 +1,6 @@
 export const LAYOUT_STORAGE_KEY = "tony-baker-cv-layout";
 
-export const layoutIds = ["interactive", "executive"] as const;
+export const layoutIds = ["interactive", "static"] as const;
 
 export type LayoutId = (typeof layoutIds)[number];
 
@@ -31,3 +31,4 @@ export function writeLayoutPreference(
     // Persistence is optional when storage is unavailable.
   }
 }
+

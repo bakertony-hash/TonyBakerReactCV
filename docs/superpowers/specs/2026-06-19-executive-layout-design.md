@@ -1,15 +1,15 @@
-# Selectable Executive CV Layout Design
+# Selectable Static CV Layout Design
 
 ## Summary
 
-Add the Stitch-designed Executive Editorial presentation as a second selectable layout while preserving the existing interactive CV. Both layouts render the same authoritative content from `src/data/cv.ts`; layout selection changes presentation, not CV facts.
+Add the Stitch-designed Static Editorial presentation as a second selectable layout while preserving the existing interactive CV. Both layouts render the same authoritative content from `src/data/cv.ts`; layout selection changes presentation, not CV facts.
 
-The existing interactive layout remains the default for first-time visitors. A visitor can switch between **Interactive** and **Executive** layouts, and the chosen layout persists in the browser.
+The existing interactive layout remains the default for first-time visitors. A visitor can switch between **Interactive** and **Static** layouts, and the chosen layout persists in the browser.
 
 ## Goals
 
 - Preserve the current interactive CV without visual or behavioural regressions.
-- Add a substantially different Executive Editorial layout based on the exported Stitch references.
+- Add a substantially different Static Editorial layout based on the exported Stitch references.
 - Reuse all profile, impact, experience, expertise, education, availability, and contact data from `src/data/cv.ts`.
 - Keep the two presentations responsive, accessible, and independently maintainable.
 - Avoid introducing Tailwind, Material Symbols, a backend, or new runtime CDN dependencies.
@@ -37,14 +37,14 @@ If the exported reference conflicts with `src/data/cv.ts`, the local CV data win
 
 ## Architecture
 
-`App` becomes a small layout host responsible for selecting and rendering a presentation. The current page moves into an `InteractiveLayout` component with its existing interactions intact. The new page is implemented as an independent `ExecutiveLayout` component.
+`App` becomes a small layout host responsible for selecting and rendering a presentation. The current page moves into an `InteractiveLayout` component with its existing interactions intact. The new page is implemented as an independent `StaticLayout` component.
 
 ```text
 src/data/cv.ts
       |
       +-------------------+
       |                   |
-InteractiveLayout   ExecutiveLayout
+InteractiveLayout   StaticLayout
       |                   |
       +---------+---------+
                 |
@@ -54,14 +54,14 @@ InteractiveLayout   ExecutiveLayout
 
 The layouts import the existing data exports directly unless a small aggregate object improves prop clarity. No duplicated copy is stored inside either layout.
 
-Layout-specific components live close to their layout. Small semantic components may be shared when they have genuinely identical behaviour, such as contact links or the layout selector. Visual cards and section compositions remain independent so the Executive layout is not constrained by the existing design.
+Layout-specific components live close to their layout. Small semantic components may be shared when they have genuinely identical behaviour, such as contact links or the layout selector. Visual cards and section compositions remain independent so the Static layout is not constrained by the existing design.
 
 ## Layout Selection
 
 The supported layout identifiers are:
 
 ```ts
-type LayoutId = "interactive" | "executive";
+type LayoutId = "interactive" | "static";
 ```
 
 The existing Interactive layout is the default when no valid saved preference exists. The chosen identifier is stored in `localStorage` and restored on future visits.
@@ -84,9 +84,9 @@ The existing layout retains:
 
 Moving the layout into its own component must not alter these behaviours. Its existing light/dark state remains scoped to the Interactive layout for this feature.
 
-## Executive Editorial Layout
+## Static Editorial Layout
 
-The Executive layout follows the Stitch reference while rendering the complete genuine CV data.
+The Static layout follows the Stitch reference while rendering the complete genuine CV data.
 
 ### Visual system
 
@@ -95,7 +95,7 @@ The Executive layout follows the Stitch reference while rendering the complete g
 - Copper accent derived from the Stitch design system
 - Playfair Display-style editorial headings, Inter-style body text, and restrained monospaced labels
 - Fine dividers, generous whitespace, minimal shadows, and limited card framing
-- Strong typographic hierarchy suitable for executive and technical readers
+- Strong typographic hierarchy suitable for static and technical readers
 
 Production font loading will be explicit and resilient. System fallbacks must preserve readability if web fonts fail.
 
@@ -124,11 +124,11 @@ Mobile is a deliberate composition based on the Stitch mobile reference, not a s
 
 ### Interaction
 
-The Executive layout favours immediate scanning. Experience and capability content is visible by default rather than placed behind tabs. Navigation uses native anchors and smooth scrolling where motion preferences permit. Interactive states cover hover, focus, active, and selected controls.
+The Static layout favours immediate scanning. Experience and capability content is visible by default rather than placed behind tabs. Navigation uses native anchors and smooth scrolling where motion preferences permit. Interactive states cover hover, focus, active, and selected controls.
 
 ## Styling Strategy
 
-The implementation uses ordinary project CSS and CSS custom properties. Executive tokens are scoped under an Executive layout root to prevent leakage into the Interactive layout.
+The implementation uses ordinary project CSS and CSS custom properties. Static tokens are scoped under an Static layout root to prevent leakage into the Interactive layout.
 
 Stitch Tailwind utility classes will be translated into semantic class names. Material Symbols will be replaced with existing Lucide icons or accessible text. The current Vite build remains free of Tailwind and runtime styling scripts.
 
@@ -162,7 +162,7 @@ No conversion layer rewrites CV prose. Small presentational transformations such
 Automated tests cover:
 
 - Interactive layout is the default without a saved preference
-- A valid saved Executive preference is restored
+- A valid saved Static preference is restored
 - Switching layouts renders the selected presentation
 - The selected identifier is persisted
 - Invalid saved identifiers fall back safely
@@ -184,11 +184,12 @@ This feature may extract the existing page into focused files as required by the
 
 ## Acceptance Criteria
 
-- Visitors can select Interactive or Executive presentation from either layout.
+- Visitors can select Interactive or Static presentation from either layout.
 - Interactive remains the first-visit default and retains its existing behaviour.
 - The preference survives a page reload when browser storage is available.
-- Executive closely reflects the supplied desktop/mobile design references.
+- Static closely reflects the supplied desktop/mobile design references.
 - Both layouts use the same `cv.ts` content and existing public assets.
 - All real experience bullets and expertise groups remain accessible.
 - No unsupported Stitch-generated facts appear.
 - Tests and production build pass.
+
