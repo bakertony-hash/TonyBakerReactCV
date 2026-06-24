@@ -528,6 +528,11 @@ h3 {
   gap: 8px;
 }
 
+.timeline-item {
+  display: grid;
+  gap: 8px;
+}
+
 .timeline-button {
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr);
@@ -583,6 +588,10 @@ h3 {
 .timeline-detail {
   min-height: 560px;
   padding: 28px;
+}
+
+.timeline-mobile-detail {
+  display: none;
 }
 
 .detail-header {
@@ -893,6 +902,28 @@ h3 {
 
   .timeline-detail {
     min-height: auto;
+  }
+
+  .timeline-grid > .timeline-detail {
+    display: none;
+  }
+
+  .timeline-mobile-detail {
+    display: block;
+    border: 1px solid color-mix(in srgb, var(--teal), var(--line) 55%);
+    border-radius: var(--radius);
+    background: var(--surface-strong);
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+
+  .timeline-mobile-detail .detail-header {
+    gap: 14px;
+    padding-bottom: 16px;
+  }
+
+  .timeline-mobile-detail .focus {
+    margin: 18px 0;
   }
 }
 

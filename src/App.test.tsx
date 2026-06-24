@@ -1,6 +1,6 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 import {
   availability,
@@ -15,6 +15,12 @@ import { LAYOUT_STORAGE_KEY } from "./layouts/layoutPreference";
 beforeEach(() => {
   window.localStorage.clear();
   window.location.hash = "";
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+  Reflect.deleteProperty(Element.prototype, "scrollIntoView");
 });
 
 // Top-level suite for the main application component and its interactive behavior.
@@ -305,9 +311,11 @@ describe("App", () => {
   // Ensure selecting a timeline entry updates the experience detail panel with the selected role.
   it("updates the experience detail panel when a timeline role is selected", async () => {
     const user = userEvent.setup();
-    render(<App />);
+    const { container } = render(<App />);
+    const timelineDetail = container.querySelector(".timeline-grid > .timeline-detail");
 
-    expect(screen.getByText(timeline[0].focus)).toBeInTheDocument();
+    expect(timelineDetail).not.toBeNull();
+    expect(within(timelineDetail as HTMLElement).getByText(timeline[0].focus)).toBeInTheDocument();
 
     const targetEntry = timeline.find((entry) => entry.id === "tesla-europe");
     expect(targetEntry).toBeDefined();
@@ -318,11 +326,70 @@ describe("App", () => {
       }),
     );
 
-    expect(screen.getByText(targetEntry!.focus)).toBeInTheDocument();
-    expect(screen.getByText(targetEntry!.location)).toBeInTheDocument();
+    expect(within(timelineDetail as HTMLElement).getByText(targetEntry!.focus)).toBeInTheDocument();
+    expect(within(timelineDetail as HTMLElement).getByText(targetEntry!.location)).toBeInTheDocument();
     for (const bullet of targetEntry!.bullets) {
-      expect(screen.getByText(bullet)).toBeInTheDocument();
+      expect(within(timelineDetail as HTMLElement).getByText(bullet)).toBeInTheDocument();
     }
+  });
+
+  // Keep mobile timeline feedback next to the tapped role so the content change is obvious.
+  it("expands the selected timeline role inline for mobile layouts", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const targetEntry = timeline.find((entry) => entry.id === "tesla-europe");
+    expect(targetEntry).toBeDefined();
+
+    const targetButton = screen.getByRole("button", {
+      name: /Technical Manager\s*TESLA Europe Limited\s*Jul 2002 - Nov 2010/i,
+    });
+
+    await user.click(targetButton);
+
+    const targetItem = targetButton.closest(".timeline-item");
+    expect(targetItem).not.toBeNull();
+    expect(within(targetItem as HTMLElement).getByText(targetEntry!.focus)).toBeInTheDocument();
+    expect(within(targetItem as HTMLElement).getByText(targetEntry!.location)).toBeInTheDocument();
+  });
+
+  // Keep the newly selected mobile accordion row at the top of the viewport after the previous row collapses.
+  it("scrolls the selected timeline role to the top on mobile", async () => {
+    const user = userEvent.setup();
+    const scrollIntoView = vi.fn();
+
+    Object.defineProperty(Element.prototype, "scrollIntoView", {
+      configurable: true,
+      value: scrollIntoView,
+    });
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn().mockImplementation((query: string) => ({
+        matches: query.includes("max-width: 760px"),
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    );
+
+    render(<App />);
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /Technical Manager\s*TESLA Europe Limited\s*Jul 2002 - Nov 2010/i,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(scrollIntoView).toHaveBeenCalledWith({
+        block: "start",
+        behavior: "smooth",
+      });
+    });
   });
 
   // Validate that selecting an expertise category changes the displayed capability details.
@@ -341,6 +408,45 @@ describe("App", () => {
     for (const item of leadership!.items) {
       expect(screen.getAllByText(item).length).toBeGreaterThan(0);
     }
+  });
+
+  // Keep the selected mobile capability tab at the top so the changed panel is visible.
+  it("scrolls the selected capability tab to the top on mobile", async () => {
+    const user = userEvent.setup();
+    const scrollIntoView = vi.fn();
+
+    Object.defineProperty(Element.prototype, "scrollIntoView", {
+      configurable: true,
+      value: scrollIntoView,
+    });
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn().mockImplementation((query: string) => ({
+        matches: query.includes("max-width: 760px"),
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    );
+
+    render(<App />);
+
+    const leadership = expertise.find((category) => category.id === "leadership");
+    expect(leadership).toBeDefined();
+
+    await user.click(screen.getByRole("tab", { name: leadership!.label }));
+
+    expect(screen.getByText(leadership!.summary)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(scrollIntoView).toHaveBeenCalledWith({
+        block: "start",
+        behavior: "smooth",
+      });
+    });
   });
 
   // Confirm that the theme toggle switches the UI from light to dark mode.

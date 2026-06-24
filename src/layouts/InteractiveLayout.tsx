@@ -60,6 +60,8 @@ function InteractiveLayout({
   const [isDark, setIsDark] = useState(false);
   const [activeHighlight, setActiveHighlight] = useState<string | null>(null);
   const highlightTimer = useRef<number | null>(null);
+  const expertiseTabsRef = useRef<HTMLDivElement>(null);
+  const hasExpertiseRendered = useRef(false);
 
   const activeTimeline = useMemo(
     () => timeline.find((entry) => entry.id === activeTimelineId) ?? timeline[0],
@@ -78,6 +80,37 @@ function InteractiveLayout({
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!hasExpertiseRendered.current) {
+      hasExpertiseRendered.current = true;
+      return;
+    }
+
+    if (typeof window.matchMedia !== "function") {
+      return;
+    }
+
+    const isMobileExpertise = window.matchMedia("(max-width: 760px)").matches;
+    if (!isMobileExpertise) {
+      return;
+    }
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      expertiseTabsRef.current?.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
+    });
+
+    return () => {
+      if (typeof window.cancelAnimationFrame === "function") {
+        window.cancelAnimationFrame(animationFrame);
+      } else {
+        window.clearTimeout(animationFrame);
+      }
+    };
+  }, [activeExpertiseId]);
 
   const triggerSectionHighlight = (sectionId: string) => {
     if (highlightTimer.current) {
@@ -237,31 +270,7 @@ function InteractiveLayout({
             </div>
 
             <article className="timeline-detail">
-              <div className="detail-header">
-                <div>
-                  <p className="period">{activeTimeline.period}</p>
-                  <h3>{activeTimeline.role}</h3>
-                  <p className="company">{activeTimeline.company}</p>
-                </div>
-                <span>{activeTimeline.location}</span>
-              </div>
-              <p className="focus">{activeTimeline.focus}</p>
-              <div className="tag-row">
-                {activeTimeline.tags.map((tag, index) => {
-                  const Icon = tagIconMap[tag] ?? defaultTagIcons[index % defaultTagIcons.length];
-                  return (
-                    <span key={tag}>
-                      <Icon size={14} aria-hidden="true" />
-                      {tag}
-                    </span>
-                  );
-                })}
-              </div>
-              <ul className="achievement-list">
-                {activeTimeline.bullets.map((bullet) => (
-                  <li key={bullet}>{bullet}</li>
-                ))}
-              </ul>
+              <TimelineDetailContent entry={activeTimeline} />
             </article>
           </div>
         </section>
@@ -277,7 +286,12 @@ function InteractiveLayout({
           </div>
 
           <div className="expertise-grid">
-            <div className="expertise-tabs" role="tablist" aria-label="Expertise categories">
+            <div
+              ref={expertiseTabsRef}
+              className="expertise-tabs"
+              role="tablist"
+              aria-label="Expertise categories"
+            >
               {expertise.map((category) => (
                 <button
                   key={category.id}
@@ -362,20 +376,103 @@ function TimelineButton({
   isActive: boolean;
   onSelect: () => void;
 }) {
+  const itemRef = useRef<HTMLDivElement>(null);
+  const hasRendered = useRef(false);
+
+  useEffect(() => {
+    if (!hasRendered.current) {
+      hasRendered.current = true;
+      return;
+    }
+
+    if (!isActive || typeof window.matchMedia !== "function") {
+      return;
+    }
+
+    const isMobileTimeline = window.matchMedia("(max-width: 760px)").matches;
+    if (!isMobileTimeline) {
+      return;
+    }
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      itemRef.current?.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
+    });
+
+    return () => {
+      if (typeof window.cancelAnimationFrame === "function") {
+        window.cancelAnimationFrame(animationFrame);
+      } else {
+        window.clearTimeout(animationFrame);
+      }
+    };
+  }, [isActive]);
+
   return (
-    <button
-      type="button"
-      className={isActive ? "timeline-button active" : "timeline-button"}
-      onClick={onSelect}
-      aria-pressed={isActive}
+    <div
+      ref={itemRef}
+      className={isActive ? "timeline-item active" : "timeline-item"}
+      role="listitem"
     >
-      <span className="timeline-dot" aria-hidden="true" />
-      <span className="timeline-button-content">
-        <strong>{entry.role}</strong>
-        <span>{entry.company}</span>
-        <small>{entry.period}</small>
-      </span>
-    </button>
+      <button
+        type="button"
+        className={isActive ? "timeline-button active" : "timeline-button"}
+        onClick={onSelect}
+        aria-pressed={isActive}
+        aria-expanded={isActive}
+        aria-controls={`timeline-mobile-detail-${entry.id}`}
+      >
+        <span className="timeline-dot" aria-hidden="true" />
+        <span className="timeline-button-content">
+          <strong>{entry.role}</strong>
+          <span>{entry.company}</span>
+          <small>{entry.period}</small>
+        </span>
+      </button>
+      {isActive ? (
+        <article
+          id={`timeline-mobile-detail-${entry.id}`}
+          className="timeline-mobile-detail"
+          aria-label={`${entry.role} details`}
+        >
+          <TimelineDetailContent entry={entry} />
+        </article>
+      ) : null}
+    </div>
+  );
+}
+
+function TimelineDetailContent({ entry }: { entry: TimelineEntry }) {
+  return (
+    <>
+      <div className="detail-header">
+        <div>
+          <p className="period">{entry.period}</p>
+          <h3>{entry.role}</h3>
+          <p className="company">{entry.company}</p>
+        </div>
+        <span>{entry.location}</span>
+      </div>
+      <p className="focus">{entry.focus}</p>
+      <div className="tag-row">
+        {entry.tags.map((tag, index) => {
+          const Icon = tagIconMap[tag] ?? defaultTagIcons[index % defaultTagIcons.length];
+          return (
+            <span key={tag}>
+              <Icon size={14} aria-hidden="true" />
+              {tag}
+            </span>
+          );
+        })}
+      </div>
+      <ul className="achievement-list">
+        {entry.bullets.map((bullet) => (
+          <li key={bullet}>{bullet}</li>
+        ))}
+      </ul>
+    </>
   );
 }
 
