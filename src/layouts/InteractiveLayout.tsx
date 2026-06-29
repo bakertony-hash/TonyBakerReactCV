@@ -377,6 +377,7 @@ function TimelineButton({
   onSelect: () => void;
 }) {
   const itemRef = useRef<HTMLDivElement>(null);
+  const logoVariant = entry.logo?.variant ?? "square";
   const hasRendered = useRef(false);
 
   useEffect(() => {
@@ -424,7 +425,17 @@ function TimelineButton({
         aria-expanded={isActive}
         aria-controls={`timeline-mobile-detail-${entry.id}`}
       >
-        <span className="timeline-dot" aria-hidden="true" />
+        {entry.logo ? (
+          <span className={`timeline-logo-lockup timeline-logo-lockup--${logoVariant}`}>
+            <img
+              src={entry.logo.src}
+              alt={entry.logo.alt}
+              className={`timeline-logo timeline-logo--${logoVariant}`}
+            />
+          </span>
+        ) : (
+          <EarlyCareerBadge size="compact" />
+        )}
         <span className="timeline-button-content">
           <strong>{entry.role}</strong>
           <span>{entry.company}</span>
@@ -445,13 +456,26 @@ function TimelineButton({
 }
 
 function TimelineDetailContent({ entry }: { entry: TimelineEntry }) {
+  const logoVariant = entry.logo?.variant ?? "square";
+
   return (
     <>
       <div className="detail-header">
-        <div>
-          <p className="period">{entry.period}</p>
-          <h3>{entry.role}</h3>
-          <p className="company">{entry.company}</p>
+        <div className="detail-title-lockup">
+          {entry.logo ? (
+            <img
+              src={entry.logo.src}
+              alt={entry.logo.alt}
+              className={`detail-company-logo detail-company-logo--${logoVariant}`}
+            />
+          ) : (
+            <EarlyCareerBadge size="detail" />
+          )}
+          <div>
+            <p className="period">{entry.period}</p>
+            <h3>{entry.role}</h3>
+            <p className="company">{entry.company}</p>
+          </div>
         </div>
         <span>{entry.location}</span>
       </div>
@@ -473,6 +497,19 @@ function TimelineDetailContent({ entry }: { entry: TimelineEntry }) {
         ))}
       </ul>
     </>
+  );
+}
+
+function EarlyCareerBadge({ size }: { size: "compact" | "detail" }) {
+  return (
+    <span
+      className={`early-career-badge early-career-badge--${size}`}
+      role="img"
+      aria-label="Earlier career badge"
+    >
+      <BriefcaseBusiness size={size === "detail" ? 22 : 18} aria-hidden="true" />
+      <span>EC</span>
+    </span>
   );
 }
 

@@ -535,8 +535,9 @@ h3 {
 
 .timeline-button {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
   width: 100%;
   border: 1px solid transparent;
   border-radius: var(--radius);
@@ -571,6 +572,66 @@ h3 {
   background: var(--teal);
 }
 
+.timeline-logo-lockup {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.timeline-logo-lockup--wide {
+  width: 68px;
+}
+
+.timeline-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.timeline-logo--wide {
+  width: 60px;
+  height: 34px;
+}
+
+.early-career-badge {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background:
+    linear-gradient(145deg, #fff, color-mix(in srgb, var(--teal-soft), #fff 64%));
+  color: var(--teal);
+  font-weight: 900;
+}
+
+.early-career-badge span {
+  color: color-mix(in srgb, var(--ink), var(--teal) 28%);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.early-career-badge--compact {
+  width: 52px;
+  height: 52px;
+  gap: 2px;
+}
+
+.early-career-badge--detail {
+  width: 76px;
+  height: 76px;
+  gap: 4px;
+}
+
+.early-career-badge--detail span {
+  font-size: 0.8rem;
+}
+
 .timeline-button-content {
   display: grid;
   gap: 4px;
@@ -601,6 +662,32 @@ h3 {
   gap: 24px;
   border-bottom: 1px solid var(--line);
   padding-bottom: 20px;
+}
+
+.detail-title-lockup {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.detail-company-logo {
+  width: 92px;
+  height: 64px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  padding: 8px;
+}
+
+.detail-company-logo--square {
+  width: 76px;
+  height: 76px;
+}
+
+.detail-company-logo--wide {
+  width: 144px;
 }
 
 .detail-header > span,
@@ -920,6 +1007,15 @@ h3 {
   .timeline-mobile-detail .detail-header {
     gap: 14px;
     padding-bottom: 16px;
+  }
+
+  .detail-title-lockup {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .detail-company-logo--wide {
+    width: min(144px, 100%);
   }
 
   .timeline-mobile-detail .focus {

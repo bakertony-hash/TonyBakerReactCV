@@ -15,6 +15,11 @@ export type ImpactHighlight = {
 export type TimelineEntry = {
   id: string;
   company: string;
+  logo?: {
+    src: string;
+    alt: string;
+    variant?: "square" | "wide";
+  };
   role: string;
   period: string;
   location: string;
@@ -154,6 +159,11 @@ export const timeline: TimelineEntry[] = [
   {
     id: "yes-distinguished",
     company: "Yes Energy",
+    logo: {
+      src: "/yes-energy-logo.png",
+      alt: "Yes Energy logo",
+      variant: "square",
+    },
     role: "Distinguished Engineer",
     period: "May 2024 - Present",
     location: "Auckland, New Zealand (Remote / Hybrid)",
@@ -171,6 +181,11 @@ export const timeline: TimelineEntry[] = [
   {
     id: "tesla-md",
     company: "TESLA Asia Pacific",
+    logo: {
+      src: "/tesla-logo.png",
+      alt: "TESLA logo",
+      variant: "wide",
+    },
     role: "Managing Director",
     period: "Mar 2021 - May 2024",
     location: "Auckland, New Zealand",
@@ -187,6 +202,11 @@ export const timeline: TimelineEntry[] = [
   {
     id: "tesla-regional",
     company: "TESLA Asia Pacific",
+    logo: {
+      src: "/tesla-logo.png",
+      alt: "TESLA logo",
+      variant: "wide",
+    },
     role: "Regional Director",
     period: "Dec 2010 - Mar 2021",
     location: "Auckland, New Zealand",
@@ -202,6 +222,11 @@ export const timeline: TimelineEntry[] = [
   {
     id: "tesla-europe",
     company: "TESLA Europe Limited",
+    logo: {
+      src: "/tesla-logo.png",
+      alt: "TESLA logo",
+      variant: "wide",
+    },
     role: "Technical Manager",
     period: "Jul 2002 - Nov 2010",
     location: "London, United Kingdom",

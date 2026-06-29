@@ -496,5 +496,46 @@ describe("App", () => {
       expect(entryButton).toBeInTheDocument();
     }
   });
-});
 
+  it("renders company logos for the interactive timeline", () => {
+    const { container } = render(<App />);
+    const logoEntries = [
+      { id: "yes-distinguished", label: "Yes Energy logo", src: "/yes-energy-logo.png" },
+      { id: "tesla-md", label: "TESLA logo", src: "/tesla-logo.png" },
+      { id: "tesla-regional", label: "TESLA logo", src: "/tesla-logo.png" },
+      { id: "tesla-europe", label: "TESLA logo", src: "/tesla-logo.png" },
+    ];
+
+    const timelineList = screen.getByRole("list", { name: /experience timeline/i });
+    for (const { id, label, src } of logoEntries) {
+      const entry = timeline.find((timelineEntry) => timelineEntry.id === id);
+      expect(entry).toBeDefined();
+      if (!entry) return;
+      const entryButton = within(timelineList).getByRole("button", {
+        name: new RegExp(entry.role.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"),
+      });
+      const logo = within(entryButton).getByRole("img", { name: label });
+      expect(logo).toBeInTheDocument();
+      expect(logo).toHaveAttribute("src", src);
+    }
+
+    const detail = container.querySelector(".timeline-grid > .timeline-detail");
+    expect(detail).not.toBeNull();
+    expect(
+      within(detail as HTMLElement).getByRole("img", { name: "Yes Energy logo" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders an intentional badge for earlier career entries", () => {
+    render(<App />);
+
+    const timelineList = screen.getByRole("list", { name: /experience timeline/i });
+    const earlierCareerButton = within(timelineList).getByRole("button", {
+      name: /Software Engineer and Systems Developer/i,
+    });
+
+    expect(
+      within(earlierCareerButton).getByRole("img", { name: "Earlier career badge" }),
+    ).toBeInTheDocument();
+  });
+});
