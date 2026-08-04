@@ -256,11 +256,26 @@ h3 {
   color: var(--muted);
 }
 
-.hero-actions,
 .tag-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.hero-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.hero-actions .cv-download-links--interactive {
+  display: contents;
+}
+
+.hero-actions .primary-action,
+.hero-actions .cv-download-links--interactive .cv-download-link {
+  justify-content: center;
+  width: 100%;
 }
 
 .cv-download-links {
@@ -965,6 +980,10 @@ h3 {
 
   .page-shell {
     padding: 24px 16px 104px;
+  }
+
+  .hero-actions {
+    grid-template-columns: 1fr;
   }
 
   h1 {

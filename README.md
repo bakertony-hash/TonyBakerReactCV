@@ -25,7 +25,7 @@ The application turns a traditional CV into an interactive profile.
 The first screen introduces Tony's professional positioning, location, target roles, and summary. It includes primary contact actions:
 
 - Start a conversation by opening a pre-addressed email link.
-- Download either the engineering-focused CV or the AI business adviser CV as PDF files from the public assets folder.
+- Download either the engineering-focused CV or the AI adviser CV as PDF files from the public assets folder.
 
 The profile panel also highlights role fit, location, and core positioning around production AI, architecture, and platform modernisation.
 
@@ -176,7 +176,7 @@ The design uses CSS variables heavily so that theme changes are centralized and 
 The public folder contains static assets that Vite serves from the site root:
 
 - `/Tony_Baker_CV.pdf` for the engineering-focused downloadable CV.
-- `/Tony_Baker_AI_Business_Adviser_CV.pdf` for the AI business adviser CV.
+- `/Tony_Baker_AI_Business_Adviser_CV.pdf` for the AI adviser CV.
 - `/tony-baker-headshot.png` for the profile image.
 - `/waikato-logo.svg` for the education section.
 

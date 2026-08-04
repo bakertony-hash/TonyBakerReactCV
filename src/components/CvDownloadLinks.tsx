@@ -9,9 +9,9 @@ export const CV_DOWNLOADS = [
   },
   {
     id: "adviser",
-    label: "AI Business Adviser CV",
+    label: "AI Adviser CV",
     href: "/Tony_Baker_AI_Business_Adviser_CV.pdf",
-    title: "Download Tony Baker's AI business adviser CV as a PDF",
+    title: "Download Tony Baker's AI adviser CV as a PDF",
   },
 ] as const;
 
