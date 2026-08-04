@@ -52,7 +52,7 @@
 }
 
 .static-layout .static-nav a:active,
-.static-layout .static-hero-actions a:active,
+.static-layout .static-hero-actions > a:active,
 .static-layout .static-footer-links a:active,
 .static-layout .static-menu-button:active,
 .static-layout .layout-switcher button:active {
@@ -60,7 +60,7 @@
 }
 
 .static-layout .static-nav > a:active,
-.static-layout .static-hero-actions a:last-child:active,
+.static-layout .cv-download-links--static-nav .cv-download-link:active,
 .static-layout .static-menu-button:active,
 .static-layout .layout-switcher button:active:not([aria-pressed="true"]) {
   border-color: var(--static-gold-strong);
@@ -68,8 +68,8 @@
 }
 
 .static-layout .static-nav-contact:active,
-.static-layout .static-hero-actions a:first-child:active,
-.static-layout .static-footer-links a:last-child:active,
+.static-layout .static-hero-actions > a:active,
+.static-layout .cv-download-links--static-footer .cv-download-link:active,
 .static-layout .layout-switcher button[aria-pressed="true"]:active {
   background: var(--static-copper-strong);
   color: var(--static-raised);
@@ -124,7 +124,8 @@
 }
 
 .static-layout .static-nav-download,
-.static-layout .static-nav-contact {
+.static-layout .static-nav-contact,
+.static-layout .cv-download-links--static-nav .cv-download-link {
   display: inline-flex;
   min-height: 36px;
   align-items: center;
@@ -134,20 +135,27 @@
   padding: 0 14px;
 }
 
+.static-layout .cv-download-links--static-nav {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .static-layout .static-nav-contact {
   background: var(--static-ink);
   color: var(--static-paper);
 }
 
 .static-layout .static-nav-download:hover,
-.static-layout .static-hero-actions a:last-child:hover {
+.static-layout .cv-download-links--static-nav .cv-download-link:hover,
+.static-layout .cv-download-links--static-hero .cv-download-link:hover {
   border-color: var(--static-copper-strong);
   background: var(--static-slate);
 }
 
 .static-layout .static-nav-contact:hover,
-.static-layout .static-hero-actions a:first-child:hover,
-.static-layout .static-footer-links a:last-child:hover {
+.static-layout .static-hero-actions > a:hover,
+.static-layout .cv-download-links--static-footer .cv-download-link:hover {
   background: var(--static-copper-strong);
   color: var(--static-raised);
 }
@@ -307,7 +315,8 @@
   margin-top: 28px;
 }
 
-.static-layout .static-hero-actions a {
+.static-layout .static-hero-actions > a,
+.static-layout .cv-download-links--static-hero .cv-download-link {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -319,7 +328,13 @@
   font-weight: 600;
 }
 
-.static-layout .static-hero-actions a:first-child {
+.static-layout .cv-download-links--static-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.static-layout .static-hero-actions > a {
   background: var(--static-ink);
   color: var(--static-paper);
 }
@@ -668,7 +683,14 @@
   gap: 6px;
 }
 
-.static-layout .static-footer-links a:last-child {
+.static-layout .cv-download-links--static-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.static-layout .cv-download-links--static-footer .cv-download-link {
   min-height: 36px;
   border: 1px solid var(--static-ink);
   border-radius: 2px;
@@ -677,13 +699,7 @@
   padding: 0 12px;
 }
 
-@media (max-width: 1120px) {
-  .static-layout .static-header,
-  .static-layout main,
-  .static-layout .static-footer {
-    width: calc(100% - 48px);
-  }
-
+@media (max-width: 1360px) {
   .static-layout .static-header {
     grid-template-columns: minmax(0, 1fr) auto auto;
     gap: 12px;
@@ -720,8 +736,27 @@
     padding-inline: 12px;
   }
 
+  .static-layout .cv-download-links--static-nav {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .static-layout .cv-download-links--static-nav .cv-download-link {
+    width: 100%;
+    min-height: 44px;
+    justify-content: flex-start;
+  }
+
   .static-layout main {
     padding-top: 56px;
+  }
+}
+
+@media (max-width: 1120px) {
+  .static-layout .static-header,
+  .static-layout main,
+  .static-layout .static-footer {
+    width: calc(100% - 48px);
   }
 
   .static-layout .static-hero {
@@ -840,10 +875,15 @@
     font-size: 0.9rem;
   }
 
-  .static-layout .static-hero-actions a {
+  .static-layout .static-hero-actions > a,
+  .static-layout .cv-download-links--static-hero .cv-download-link {
     flex: 1 1 140px;
     justify-content: center;
     padding-inline: 12px;
+  }
+
+  .static-layout .cv-download-links--static-hero {
+    flex: 1 1 100%;
   }
 
   .static-layout .static-impact {

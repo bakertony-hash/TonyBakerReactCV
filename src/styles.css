@@ -263,6 +263,29 @@ h3 {
   gap: 10px;
 }
 
+.cv-download-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cv-download-links--interactive .cv-download-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-strong);
+  color: var(--ink);
+  padding: 0 15px;
+  font-weight: 800;
+}
+
+.cv-download-links--interactive .cv-download-link:hover {
+  transform: translateY(-1px);
+}
+
 .contact-links {
   display: grid;
   gap: 10px;

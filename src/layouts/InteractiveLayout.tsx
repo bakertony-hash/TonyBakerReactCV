@@ -3,7 +3,6 @@ import {
   ArrowUpRight,
   BriefcaseBusiness,
   Cpu,
-  Download,
   ExternalLink,
   Github,
   Layers3,
@@ -29,6 +28,7 @@ import {
   type TimelineEntry,
 } from "../data/cv";
 import LayoutSwitcher from "../components/LayoutSwitcher";
+import CvDownloadLinks from "../components/CvDownloadLinks";
 import type { LayoutId } from "./layoutPreference";
 
 const navItems = [
@@ -187,15 +187,7 @@ function InteractiveLayout({
                 <Mail size={18} aria-hidden="true" />
                 Start a conversation
               </a>
-              <a
-                className="secondary-action"
-                href="/Tony_Baker_CV.pdf"
-                download
-                title="Download Tony Baker's CV as a PDF"
-              >
-                <Download size={18} aria-hidden="true" />
-                Download CV
-              </a>
+              <CvDownloadLinks variant="interactive" />
             </div>
           </div>
 

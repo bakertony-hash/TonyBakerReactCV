@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
+import { CV_DOWNLOADS } from "./components/CvDownloadLinks";
 import {
   availability,
   education,
@@ -11,6 +12,22 @@ import {
   timeline,
 } from "./data/cv";
 import { LAYOUT_STORAGE_KEY } from "./layouts/layoutPreference";
+
+function expectCvDownloadLinks(
+  scope: ParentNode,
+  expectedCountPerVariant: number = CV_DOWNLOADS.length,
+) {
+  for (const cv of CV_DOWNLOADS) {
+    const links = within(scope as HTMLElement).getAllByRole("link", {
+      name: cv.label,
+    });
+    expect(links).toHaveLength(expectedCountPerVariant);
+    for (const link of links) {
+      expect(link).toHaveAttribute("href", cv.href);
+      expect(link).toHaveAttribute("download");
+    }
+  }
+}
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -145,11 +162,7 @@ describe("App", () => {
     for (const distinction of education.distinction) {
       expect(educationContent.getByText(distinction)).toBeInTheDocument();
     }
-    for (const downloadLink of screen.getAllByRole("link", {
-      name: "Download CV",
-    })) {
-      expect(downloadLink).toHaveAttribute("download");
-    }
+    expectCvDownloadLinks(document, 3);
   });
 
   it("does not render fabricated Stitch facts", () => {
@@ -177,7 +190,8 @@ describe("App", () => {
 
     const nav = container.querySelector("#static-navigation");
     expect(nav).toHaveClass("static-nav");
-    expect(nav?.querySelector(".static-nav-download")).toHaveAttribute("download");
+    expect(nav?.querySelector(".cv-download-links--static-nav")).not.toBeNull();
+    expectCvDownloadLinks(nav as HTMLElement, 1);
     expect(nav?.querySelector(".static-nav-contact")).toHaveAttribute(
       "href",
       `mailto:${profile.email}`,
@@ -192,11 +206,12 @@ describe("App", () => {
       "/tony-baker-headshot.png",
     );
     expect(
-      within(container.querySelector(".static-hero-actions") as HTMLElement).getByRole(
-        "link",
-        { name: "Download CV" },
-      ),
-    ).toHaveAttribute("download");
+      container.querySelector(".static-hero-actions .cv-download-links--static-hero"),
+    ).not.toBeNull();
+    expectCvDownloadLinks(
+      container.querySelector(".static-hero-actions") as HTMLElement,
+      1,
+    );
 
     const impact = container.querySelector("section.static-impact");
     expect(impact).toHaveAttribute("aria-labelledby", "static-impact-title");
@@ -251,6 +266,7 @@ describe("App", () => {
       "href",
       `https://${profile.linkedin}`,
     );
+    expectCvDownloadLinks(footerLinks as HTMLElement, 1);
   });
 
   it("switches from a saved Static layout to the interactive layout", async () => {
@@ -285,6 +301,23 @@ describe("App", () => {
     expect(window.location.hash).toBe("#static-experience");
   });
 
+  it("closes the static menu after choosing a CV download", async () => {
+    window.localStorage.setItem(LAYOUT_STORAGE_KEY, "static");
+    const user = userEvent.setup();
+    render(<App />);
+
+    const menuButton = screen.getByRole("button", { name: "Menu" });
+    await user.click(menuButton);
+    expect(menuButton).toHaveAttribute("aria-expanded", "true");
+
+    await user.click(
+      within(screen.getByLabelText("static navigation")).getByRole("link", {
+        name: "Engineering CV",
+      }),
+    );
+    expect(menuButton).toHaveAttribute("aria-expanded", "false");
+  });
+
   // Verify the top-level profile summary, career impact metrics, and primary call-to-action links.
   it("presents Tony Baker's profile, impact metrics, and primary actions", () => {
     render(<App />);
@@ -303,8 +336,9 @@ describe("App", () => {
     expect(
       screen.getByRole("link", { name: /start a conversation/i }),
     ).toHaveAttribute("href", `mailto:${profile.email}`);
-    expect(screen.getByRole("link", { name: /download cv/i })).toHaveAttribute(
-      "download",
+    expectCvDownloadLinks(
+      screen.getByLabelText("Contact actions"),
+      1,
     );
   });
 

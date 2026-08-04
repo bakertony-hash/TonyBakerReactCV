@@ -1,5 +1,4 @@
 import {
-  Download,
   ExternalLink,
   Mail,
   MapPin,
@@ -7,6 +6,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import LayoutSwitcher from "../components/LayoutSwitcher";
+import CvDownloadLinks from "../components/CvDownloadLinks";
 import {
   availability,
   education,
@@ -59,10 +59,11 @@ function StaticLayout({
               {label}
             </a>
           ))}
-          <a className="static-nav-download" href="/Tony_Baker_CV.pdf" download>
-            <Download aria-hidden="true" />
-            Download CV
-          </a>
+          <CvDownloadLinks
+            variant="static-nav"
+            iconSize={15}
+            onNavigate={() => setMenuOpen(false)}
+          />
           <a className="static-nav-contact" href={`mailto:${profile.email}`}>
             <Mail aria-hidden="true" />
             Contact
@@ -99,13 +100,7 @@ function StaticLayout({
                 <Mail aria-hidden="true" />
                 Contact Tony
               </a>
-              <a
-                href="/Tony_Baker_CV.pdf"
-                download
-              >
-                <Download aria-hidden="true" />
-                Download CV
-              </a>
+              <CvDownloadLinks variant="static-hero" iconSize={15} />
             </div>
           </div>
           <figure className="static-portrait">
@@ -241,10 +236,7 @@ function StaticLayout({
             LinkedIn
             <ExternalLink aria-hidden="true" />
           </a>
-          <a href="/Tony_Baker_CV.pdf" download>
-            <Download aria-hidden="true" />
-            Download portfolio CV
-          </a>
+          <CvDownloadLinks variant="static-footer" iconSize={15} />
         </div>
       </footer>
     </div>

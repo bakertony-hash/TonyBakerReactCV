@@ -22,10 +22,10 @@ The application turns a traditional CV into an interactive profile.
 
 ### Overview Section
 
-The first screen introduces Tony's professional positioning, location, target roles, and summary. It includes two primary actions:
+The first screen introduces Tony's professional positioning, location, target roles, and summary. It includes primary contact actions:
 
 - Start a conversation by opening a pre-addressed email link.
-- Download a PDF copy of the CV from the public assets folder.
+- Download either the engineering-focused CV or the AI business adviser CV as PDF files from the public assets folder.
 
 The profile panel also highlights role fit, location, and core positioning around production AI, architecture, and platform modernisation.
 
@@ -110,11 +110,18 @@ The app is intentionally lightweight. It does not require a backend, database, a
 ├── pnpm-lock.yaml
 ├── public/
 │   ├── Tony_Baker_CV.pdf
+│   ├── Tony_Baker_AI_Business_Adviser_CV.pdf
 │   ├── tony-baker-headshot.png
 │   └── waikato-logo.svg
 ├── src/
 │   ├── App.tsx
 │   ├── main.tsx
+│   ├── components/
+│   │   ├── CvDownloadLinks.tsx
+│   │   └── LayoutSwitcher.tsx
+│   ├── layouts/
+│   │   ├── InteractiveLayout.tsx
+│   │   └── StaticLayout.tsx
 │   ├── styles.css
 │   └── data/
 │       └── cv.ts
@@ -168,7 +175,8 @@ The design uses CSS variables heavily so that theme changes are centralized and 
 
 The public folder contains static assets that Vite serves from the site root:
 
-- `/Tony_Baker_CV.pdf` for the downloadable CV.
+- `/Tony_Baker_CV.pdf` for the engineering-focused downloadable CV.
+- `/Tony_Baker_AI_Business_Adviser_CV.pdf` for the AI business adviser CV.
 - `/tony-baker-headshot.png` for the profile image.
 - `/waikato-logo.svg` for the education section.
 
