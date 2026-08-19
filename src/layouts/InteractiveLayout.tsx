@@ -181,7 +181,7 @@ function InteractiveLayout({
             <h1 id="hero-title">{profile.name}</h1>
             <p className="hero-title">{profile.title}</p>
             <p className="hero-summary">{profile.summary[0]}</p>
-            <p className="hero-summary muted">{profile.summary[1]}</p>
+            <p className="hero-summary">{profile.summary[1]}</p>
             <div className="hero-actions" aria-label="Contact actions">
               <a className="primary-action" href={`mailto:${profile.email}`}>
                 <Mail size={18} aria-hidden="true" />

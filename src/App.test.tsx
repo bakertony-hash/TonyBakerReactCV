@@ -320,13 +320,21 @@ describe("App", () => {
 
   // Verify the top-level profile summary, career impact metrics, and primary call-to-action links.
   it("presents Tony Baker's profile, impact metrics, and primary actions", () => {
-    render(<App />);
+    const { container } = render(<App />);
 
     expect(
       screen.getByRole("heading", { level: 1, name: profile.name }),
     ).toBeInTheDocument();
     expect(screen.getByText(profile.title)).toBeInTheDocument();
     expect(screen.getByText(profile.location)).toBeInTheDocument();
+
+    const heroSummaries = container.querySelectorAll(".hero-copy .hero-summary");
+    expect(heroSummaries).toHaveLength(2);
+    expect(heroSummaries[0]).toHaveTextContent(profile.summary[0]);
+    expect(heroSummaries[1]).toHaveTextContent(profile.summary[1]);
+    heroSummaries.forEach((paragraph) => {
+      expect(paragraph).not.toHaveClass("muted");
+    });
 
     for (const highlight of impactHighlights) {
       expect(screen.getByText(highlight.metric)).toBeInTheDocument();
