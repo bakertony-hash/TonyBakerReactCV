@@ -30,7 +30,7 @@ export type TimelineEntry = {
 
 export const profile = {
   name: "Tony Baker",
-  title: "Distinguished Engineer | AI Engineering | Software Architect",
+  title: "Distinguished Engineer | AI Engineering | AI Advisory",
   location: "Auckland, New Zealand",
   email: "baker.tony@gmail.com",
   phone: "+64 201 111 721",
