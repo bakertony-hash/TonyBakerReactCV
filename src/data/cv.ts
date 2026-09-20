@@ -266,4 +266,4 @@ export const education = {
 };
 
 export const availability =
-  "Based in Auckland, New Zealand. Bringing 24+ years of cross-border collaboration spanning EU, US and APAC corporate time zones.";
+  "Based in Auckland, New Zealand. Bringing 26+ years of cross-border collaboration spanning EU, US and APAC corporate time zones.";
